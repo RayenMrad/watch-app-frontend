@@ -1,8 +1,18 @@
 import 'package:clean_arch/data/data_source/local_data_source/authentication_local_data_source.dart';
 import 'package:clean_arch/data/data_source/remote_data_source/remote_authentication_data_source.dart';
+import 'package:clean_arch/data/data_source/remote_data_source/remote_cart_data_source.dart';
+import 'package:clean_arch/data/data_source/remote_data_source/remote_wishlist_data_source.dart';
 import 'package:clean_arch/data/repository/authentication_repository_impl.dart';
+import 'package:clean_arch/data/repository/cart_repository_impl.dart';
+import 'package:clean_arch/data/repository/wishlist_reporitory_impl.dart';
 import 'package:clean_arch/domain/repository/authentication_repository.dart';
+import 'package:clean_arch/domain/repository/cart_repository.dart';
+import 'package:clean_arch/domain/repository/wishlist_repository.dart';
 import 'package:clean_arch/domain/usecases/authentication_usecases/create_account_usecase.dart';
+import 'package:clean_arch/domain/usecases/authentication_usecases/login_usecase.dart';
+import 'package:clean_arch/domain/usecases/cart_usecases/create_cart_usecase.dart';
+import 'package:clean_arch/domain/usecases/cart_usecases/get_cart_by_id_usecase.dart';
+import 'package:clean_arch/domain/usecases/cart_usecases/update_cart_usecase.dart';
 import 'package:get_it/get_it.dart';
 
 import 'domain/usecases/wishlist_usecases/create_wishlist_usecase.dart';
@@ -17,9 +27,10 @@ Future<void> init() async {
   sl.registerLazySingleton<AuthenticationRepository>(
     () => AuthenticationRepositoryImpl(sl(), sl()),
   );
-  // sl.registerLazySingleton<CartRepository>(() => CartRepositoryImpl(sl()));
-  // sl.registerLazySingleton<WishListRepository>(
-  //     () => WishListRepositoryImpl(sl()));
+  sl.registerLazySingleton<CartRepository>(
+      () => CartRepositoryImpl(cartRemoteDataSource: sl()));
+  sl.registerLazySingleton<WishlistRepository>(
+      () => WishlistReporitoryImpl(wishlistRemoteDataSource: sl()));
   // sl.registerLazySingleton<PromotionRepository>(
   //     () => PromotionRepositoryImpl(sl()));
   // sl.registerLazySingleton<ProductRepository>(() => ProductRepositoryImp(sl()));
@@ -44,10 +55,10 @@ Future<void> init() async {
       () => AuthenticationRemoteDataSourceImpl());
   sl.registerLazySingleton<AuthenticationLocalDataSource>(
       () => AuthenticationLocalDataSourceImpl());
-  // sl.registerLazySingleton<CartRemoteDataSource>(
-  //     () => CartRemoteDataSourceImpl());
-  // sl.registerLazySingleton<WishListRemoteDataSource>(
-  //     () => WishListRemoteDataSourceImpl());
+  sl.registerLazySingleton<CartRemoteDataSource>(
+      () => CartRemoteDataSourceImpl());
+  sl.registerLazySingleton<WishlistRemoteDataSource>(
+      () => WishlistRemoteDataSourceImpl());
   // sl.registerLazySingleton<PromotionRemoteDataSource>(
   //     () => PromotionRemoteDataSourceImpl());
   // sl.registerLazySingleton<ProductRemoteDataSource>(
@@ -74,7 +85,7 @@ Future<void> init() async {
   /* usecases */
   //authentication//
   sl.registerLazySingleton(() => CreateAccountUsecase(sl()));
-  // sl.registerLazySingleton(() => LoginUsecase(sl()));
+  sl.registerLazySingleton(() => LoginUsecase(sl()));
   // sl.registerLazySingleton(() => ForgetPasswordUsecase(sl()));
   // sl.registerLazySingleton(() => OTPVerificationUsecase(sl()));
   // sl.registerLazySingleton(() => ResetPasswordUsecase(sl()));
@@ -87,15 +98,15 @@ Future<void> init() async {
   // sl.registerLazySingleton(() => GetRecoveryEmailUsecase(sl()));
 
   //cart//
-  // sl.registerLazySingleton(() => CreateCartUsecase(sl()));
-  // sl.registerLazySingleton(() => UpdateCartUsecase(sl()));
-  // sl.registerLazySingleton(() => GetCartUsecase(sl()));
+  sl.registerLazySingleton(() => CreateCartUsecase(sl()));
+  sl.registerLazySingleton(() => UpdateCartUsecase(sl()));
+  sl.registerLazySingleton(() => GetCartByIdUsecase(sl()));
   // sl.registerLazySingleton(() => DeleteCartUsecase(sl()));
 
   // // //wishlist//
-  // sl.registerLazySingleton(() => CreateWishListUsecase(sl()));
-  // sl.registerLazySingleton(() => UpdateWishListUsecase(sl()));
-  // sl.registerLazySingleton(() => GetWishListUsecase(sl()));
+  sl.registerLazySingleton(() => CreateWishListUsecase(sl()));
+  sl.registerLazySingleton(() => UpdateWishListUsecase(sl()));
+  sl.registerLazySingleton(() => GetWishlistUsecase(sl()));
   // sl.registerLazySingleton(() => DeleteWishListUsecase(sl()));
 
   // //promotion//

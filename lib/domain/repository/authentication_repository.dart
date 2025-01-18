@@ -6,7 +6,7 @@ import 'package:clean_arch/domain/enteties/user.dart';
 import 'package:dartz/dartz.dart';
 
 abstract class AuthenticationRepository {
-  Future<Either<Failure, Unit>> createAccount(
+  Future<Either<Failure, String>> createAccount(
       {required String firstName,
       required String lastName,
       required String image,
@@ -43,4 +43,7 @@ abstract class AuthenticationRepository {
   });
 
   Future<Either<Failure, User>> getUserById({required String userId});
+
+  Future<Either<Failure, Token>> autologin();
+  Future<Either<Failure, Unit>> logout();
 }

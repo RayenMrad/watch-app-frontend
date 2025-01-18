@@ -9,12 +9,9 @@ class CartModel extends Cart {
   });
 
   factory CartModel.fromJson(Map<String, dynamic> json) => CartModel(
-        id: json['_id'] as String,
-        userId: json['userId'] as String,
-        sales: (json['sales'] as List<dynamic>)
-            .map((e) => SalesModel.fromJson(e as Map<String, dynamic>))
-            .toList(),
-      );
+      id: json['_id'] as String,
+      userId: json['userId'] as String,
+      sales: (json['sales'] as List).map((e) => e.toString()).toList());
 
   Map<String, dynamic> toJson() => {
         '_id': id,

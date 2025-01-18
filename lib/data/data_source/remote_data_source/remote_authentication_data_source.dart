@@ -14,7 +14,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:http/http.dart' as http;
 
 abstract class AuthenticationRemoteDataSource {
-  Future<void> createAccount(
+  Future<String> createAccount(
     String firstName,
     String lastName,
     String image,
@@ -44,6 +44,8 @@ abstract class AuthenticationRemoteDataSource {
       String userId, String oldPassword, String newPassword);
 
   Future<User> getOneUser(String userId);
+
+  Future<TokenModel> autoLogin();
 }
 
 class AuthenticationRemoteDataSourceImpl
@@ -57,7 +59,7 @@ class AuthenticationRemoteDataSourceImpl
   }
 
   @override
-  Future<void> createAccount(
+  Future<String> createAccount(
       String firstName,
       String lastName,
       String image,
@@ -103,8 +105,9 @@ class AuthenticationRemoteDataSourceImpl
       print(res.statusCode);
       if (res.statusCode == 201) {
         final responseData = jsonDecode(res.body);
+        return responseData.data["uId"];
       } else if (res.statusCode == 403) {
-        throw RegistrationException("t.email_already_used");
+        throw RegistrationException(t.email_already_used);
       } else {
         throw ServerException(message: "Error: ${res.body}");
       }
@@ -135,8 +138,8 @@ class AuthenticationRemoteDataSourceImpl
   @override
   Future<TokenModel> login(String email, String password) async {
     String msg = "";
-    // AppLocalizations t =
-    //     await AppLocalizations.delegate.load(Locale(await locale));
+    AppLocalizations t =
+        await AppLocalizations.delegate.load(Locale(await locale));
     try {
       Map<String, dynamic> user = {'email': email, 'password': password};
       final url = Uri.parse(ApiConst.login);
@@ -153,10 +156,10 @@ class AuthenticationRemoteDataSourceImpl
       } else {
         switch (res.statusCode) {
           case 202:
-            msg = "t.wrong_password;";
+            msg = t.wrong_password;
             break;
           case 404:
-            msg = "t.email_not_registred";
+            msg = t.email_not_registred;
             break;
           default:
         }
@@ -246,6 +249,16 @@ class AuthenticationRemoteDataSourceImpl
       }
     } catch (e) {
       throw ServerException(message: 'Cannot update profile: ${e.toString()}');
+    }
+  }
+
+  @override
+  Future<TokenModel> autoLogin() async {
+    try {
+      return await token;
+    } catch (e) {
+      print(e);
+      rethrow;
     }
   }
 }

@@ -1,5 +1,8 @@
+import 'package:clean_arch/presentation/controller/authentication_controller.dart';
+import 'package:clean_arch/presentation/screens/auth-screens/login-page.dart';
 import 'package:clean_arch/presentation/screens/home-screen.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class DrawerContents extends StatelessWidget {
   const DrawerContents({super.key});
@@ -156,20 +159,23 @@ class DrawerContents extends StatelessWidget {
                 height: 10,
               ),
               ListTile(
-                leading: Icon(
-                  Icons.logout,
-                  size: 30,
-                  color: Colors.black54,
-                ),
-                title: Text(
-                  "Exit",
-                  style: TextStyle(
-                      fontFamily: 'Roboto',
-                      fontWeight: FontWeight.w600,
-                      fontSize: 20),
-                ),
-                onTap: () => null,
-              ),
+                  leading: Icon(
+                    Icons.logout,
+                    size: 30,
+                    color: Colors.black54,
+                  ),
+                  title: Text(
+                    "Log Out",
+                    style: TextStyle(
+                        fontFamily: 'Roboto',
+                        fontWeight: FontWeight.w600,
+                        fontSize: 20),
+                  ),
+                  onTap: () async {
+                    final AuthenticationController authenticationController =
+                        Get.find();
+                    await authenticationController.logout(context);
+                  }),
             ],
           )
         ],

@@ -20,7 +20,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   );
 
   @override
-  Future<Either<Failure, Unit>> createAccount(
+  Future<Either<Failure, String>> createAccount(
       {required String firstName,
       required String lastName,
       required String image,
@@ -31,9 +31,9 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       required DateTime birthDate,
       required String password}) async {
     try {
-      await authenticationRemoteDataSource.createAccount(firstName, lastName,
-          image, email, adresse, phone, gender, birthDate, password);
-      return Right(unit);
+      final res = await authenticationRemoteDataSource.createAccount(firstName,
+          lastName, image, email, adresse, phone, gender, birthDate, password);
+      return Right(res);
     } on RegistrationException catch (e) {
       return Left(RegistrationFailure(e.message));
     }
@@ -58,11 +58,8 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       TokenModel tm =
           await authenticationRemoteDataSource.login(email, password);
       await authenticationLocalDataSource.saveUserInformations(tm);
-      Token t = Token(
-          token: tm.token,
-          refreshToken: tm.refreshToken,
-          expiryDate: tm.expiryDate,
-          userId: tm.userId);
+      Token t =
+          Token(token: tm.token, expiryDate: tm.expiryDate, userId: tm.userId);
 
       return right(t);
     } on LoginException catch (e) {
@@ -115,6 +112,26 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       return const Right(unit);
     } on ServerException {
       return Left(ServerFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, Token>> autologin() async {
+    try {
+      final tk = await authenticationRemoteDataSource.autoLogin();
+      return right(tk);
+    } on NotAuthorizedException {
+      return left(NotAuthorizedFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> logout() async {
+    try {
+      await authenticationLocalDataSource.logout();
+      return right(unit);
+    } catch (e) {
+      return left(LocalStorageFailure());
     }
   }
 }

@@ -7,6 +7,10 @@ import 'package:clean_arch/di.dart';
 import 'package:clean_arch/domain/enteties/token.dart';
 import 'package:clean_arch/domain/enteties/user.dart';
 import 'package:clean_arch/domain/usecases/authentication_usecases/create_account_usecase.dart';
+import 'package:clean_arch/domain/usecases/authentication_usecases/login_usecase.dart';
+import 'package:clean_arch/domain/usecases/authentication_usecases/logout_usecase.dart';
+import 'package:clean_arch/presentation/screens/auth-screens/login-page.dart';
+import 'package:clean_arch/presentation/screens/home-screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -123,6 +127,51 @@ class AuthenticationController extends GetxController {
     return userid;
   }
 
+  Future<void> login(
+      {required TextEditingController email,
+      required TextEditingController password,
+      required BuildContext context}) async {
+    isLoading = true;
+    update();
+    final res =
+        await LoginUsecase(sl())(email: email.text, password: password.text);
+    res.fold(
+        (l) => Fluttertoast.showToast(
+            msg: l.message!,
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.TOP,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0), (r) async {
+      token = r;
+      email.clear();
+      password.clear();
+      return Navigator.of(context)
+          .pushReplacement(MaterialPageRoute(builder: (_) => const HomePage()));
+      // await getOneUser(r.userId).then((value) async {
+      //   final WishListController wishListController = Get.find();
+      //   final CartController cartController = Get.find();
+      //   // final CategoryController categorControlller = Get.find();
+      //   final AuthenticationController authController = Get.find();
+      //   await wishListController
+      //       .getUserWishlist(authController.currentUser.id!);
+      //   await cartController.getUserCart(authController.currentUser.id!);
+      //
+      // });
+    });
+    isLoading = false;
+    update();
+  }
+
+  Future<void> logout(BuildContext context) async {
+    isLoading = false;
+    update();
+    await LogoutUsecase(sl())();
+    Navigator.of(context)
+        .pushReplacement(MaterialPageRoute(builder: (_) => const LoginPage()));
+  }
+
   /*Future<void> updateImage(BuildContext context) async {
     if (userImage == '') {
       await ClearUserImageUsecase(sl())(currentUser.id!);
@@ -141,40 +190,7 @@ class AuthenticationController extends GetxController {
             fontSize: 16.0));
   }
 
-  Future<void> login(TextEditingController email,
-      TextEditingController password, BuildContext context) async {
-    isLoading = true;
-    update();
-    final res =
-        await LoginUsecase(sl())(email: email.text, password: password.text);
-    res.fold(
-        (l) => Fluttertoast.showToast(
-            msg: l.message!,
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 1,
-            backgroundColor: AppColors.toastColor,
-            textColor: AppColors.white,
-            fontSize: 16.0), (r) async {
-      token = r;
-      email.clear();
-      password.clear();
-      await getCurrentUser(r.userId).then((value) async {
-        final WishListController wishListController = Get.find();
-        final CartController cartController = Get.find();
-        // final CategoryController categorControlller = Get.find();
-        final AuthenticationController authController = Get.find();
-        await wishListController
-            .getUserWishlist(authController.currentUser.id!);
-        await cartController.getUserCart(authController.currentUser.id!);
-        return Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (_) => const MainScreen()));
-      });
-    });
-    isLoading = false;
-    update();
-  }
-
+  
   Future<void> sendFrogetPasswordRequest(TextEditingController useremail,
       String destionation, BuildContext context) async {
     String message = '';
@@ -243,24 +259,7 @@ class AuthenticationController extends GetxController {
 
  
 
-  Future<void> getCurrentUser(String userId) async {
-    final res = await GetUserUsecase(sl())(userId);
-    res.fold(
-        (l) => Fluttertoast.showToast(
-            msg: l.message!,
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 1,
-            backgroundColor: AppColors.toastColor,
-            textColor: AppColors.white,
-            fontSize: 16.0), (r) {
-      currentUser = r;
-      city = currentUser.address;
-      gender = currentUser.gender;
-      birthDate = currentUser.birthDate;
-    });
-    update();
-  }
+  
 
   Future<void> updateProfile(
       {required String address,
@@ -325,14 +324,7 @@ class AuthenticationController extends GetxController {
         fontSize: 16.0);
   }
 
-  Future<void> logout(BuildContext context) async {
-    isLoading = false;
-    update();
-    await LogoutUsecase(sl())();
-    Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const LoginScreen()));
-  }
-
+  
   Future<void> facebookLogin(BuildContext context) async {
     isLoading = true;
 

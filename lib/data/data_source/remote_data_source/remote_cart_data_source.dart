@@ -7,13 +7,14 @@ import 'package:clean_arch/data/data_source/local_data_source/settings_local_dat
 import 'package:clean_arch/data/models/cart_model.dart';
 import 'package:clean_arch/data/models/sales_model.dart';
 import 'package:clean_arch/data/models/token_model.dart';
-import 'package:clean_arch/domain/enteties/sales.dart';
+import 'package:clean_arch/domain/enteties/cart.dart';
 import 'package:http/http.dart' as http;
 
 abstract class CartRemoteDataSource {
-  Future<void> createCart(String userId);
-  Future<void> updateCart(String cartId, List<Sales> sales);
-  Future<CartModel> getCart(String cartId);
+  Future<void> createCart({required String userId});
+  Future<void> updateCart({required CartModel cart});
+  // Future<void> updateCart(String cartId, List<String> sales);
+  Future<CartModel> getCart({required String cartId});
 }
 
 class CartRemoteDataSourceImpl implements CartRemoteDataSource {
@@ -26,18 +27,13 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
   }
 
   @override
-  Future<void> createCart(String userId) async {
+  Future<void> createCart({required String userId}) async {
     try {
-      String authToken = await token.then((value) => value.token);
       final url = Uri.parse(ApiConst.addCart);
       final body = jsonEncode({'userId': userId, 'sales': []});
 
       final res = await http.post(
         url,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $authToken',
-        },
         body: body,
       );
       if (res.statusCode != 200) {
@@ -49,7 +45,7 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
   }
 
   @override
-  Future<CartModel> getCart(String cartId) async {
+  Future<CartModel> getCart({required String cartId}) async {
     try {
       final url = Uri.parse('${ApiConst.getOneCart}/$cartId');
       final res = await http.get(url);
@@ -67,13 +63,11 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
   }
 
   @override
-  Future<void> updateCart(String cartId, List<Sales> sales) async {
+  Future<void> updateCart({required CartModel cart}) async {
     try {
       String authToken = await token.then((value) => value.token);
-      final url = Uri.parse("${ApiConst.updateCart}/$cartId");
-      final body = jsonEncode({
-        "sales": sales.map((sale) => (sale as SalesModel).tojson()).toList(),
-      });
+      final url = Uri.parse(ApiConst.updateCart);
+      final body = jsonEncode({"id": cart.id, "sales": cart.sales});
       final res = await http.put(
         url,
         headers: {
@@ -86,7 +80,31 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
         throw ServerException(message: "Failed to update cart");
       }
     } catch (e) {
+      print("cart error ${e.toString()}");
       rethrow;
     }
   }
+  // @override
+  // Future<void> updateCart(String cartId, List<String> sales) async {
+  //   try {
+  //     String authToken = await token.then((value) => value.token);
+  //     final url = Uri.parse("${ApiConst.updateCart}/$cartId");
+  //     final body = jsonEncode({
+  //       "sales": sales.map((sale) => (sale as SalesModel).tojson()).toList(),
+  //     });
+  //     final res = await http.put(
+  //       url,
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         'Authorization': 'Bearer $authToken',
+  //       },
+  //       body: body,
+  //     );
+  //     if (res.statusCode != 200) {
+  //       throw ServerException(message: "Failed to update cart");
+  //     }
+  //   } catch (e) {
+  //     rethrow;
+  //   }
+  // }
 }
