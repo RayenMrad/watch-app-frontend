@@ -1,5 +1,6 @@
 import 'package:clean_arch/presentation/controller/authentication_controller.dart';
 import 'package:clean_arch/presentation/screens/auth-screens/login-page.dart';
+import 'package:clean_arch/presentation/screens/edit-profile-screen.dart';
 import 'package:clean_arch/presentation/screens/home-screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -93,7 +94,13 @@ class DrawerContents extends StatelessWidget {
                       fontWeight: FontWeight.w600,
                       fontSize: 20),
                 ),
-                onTap: () => null,
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => EditProfilePage(),
+                    ),
+                  );
+                },
               ),
               SizedBox(
                 height: 20,

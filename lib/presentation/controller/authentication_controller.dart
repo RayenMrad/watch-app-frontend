@@ -6,15 +6,25 @@ import 'package:clean_arch/core/utils/string_const.dart';
 import 'package:clean_arch/di.dart';
 import 'package:clean_arch/domain/enteties/token.dart';
 import 'package:clean_arch/domain/enteties/user.dart';
+import 'package:clean_arch/domain/usecases/authentication_usecases/clear_user_image_usercase.dart';
 import 'package:clean_arch/domain/usecases/authentication_usecases/create_account_usecase.dart';
+import 'package:clean_arch/domain/usecases/authentication_usecases/forget_password_usecase.dart';
+import 'package:clean_arch/domain/usecases/authentication_usecases/get_user_by_id_usecase.dart';
 import 'package:clean_arch/domain/usecases/authentication_usecases/login_usecase.dart';
 import 'package:clean_arch/domain/usecases/authentication_usecases/logout_usecase.dart';
+import 'package:clean_arch/domain/usecases/authentication_usecases/reset_password_usecase.dart';
+import 'package:clean_arch/domain/usecases/authentication_usecases/update_image_usecase.dart';
+import 'package:clean_arch/domain/usecases/authentication_usecases/update_user_usecase.dart';
+import 'package:clean_arch/domain/usecases/authentication_usecases/verify_otp_usecase.dart';
 import 'package:clean_arch/presentation/screens/auth-screens/login-page.dart';
+import 'package:clean_arch/presentation/screens/auth-screens/otp-screen.dart';
+import 'package:clean_arch/presentation/screens/auth-screens/reset-password-screen.dart';
 import 'package:clean_arch/presentation/screens/home-screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
 // ignore: depend_on_referenced_packages
 import 'package:path/path.dart';
@@ -26,14 +36,14 @@ class AuthenticationController extends GetxController {
   bool isLoading = false;
   late User currentUser;
   String userImage = '';
-  //XFile? img;
+  XFile? img;
   File? f;
   String? gender;
   String? birthDate;
   String? city;
   String? speciality;
   String? description;
-  //final ImagePicker _picker = ImagePicker();
+  final ImagePicker _picker = ImagePicker();
 
   bool get missingData =>
       currentUser.phone == null ||
@@ -54,7 +64,7 @@ class AuthenticationController extends GetxController {
     update();
   }
 
-  /* Future<void> pickImage() async {
+  Future<void> pickImage() async {
     try {
       img = await _picker.pickImage(source: ImageSource.gallery);
       if (img != null) {
@@ -64,7 +74,7 @@ class AuthenticationController extends GetxController {
     } catch (e) {
       print(e);
     }
-  }*/
+  }
 
   void aceptTerms(bool v) {
     termsAccepted = v;
@@ -73,7 +83,7 @@ class AuthenticationController extends GetxController {
 
   void setuserImage(String image) {
     userImage = image;
-    update([ControllerID.UPDATE_USER_IMAGE]);
+    // update([ControllerID.UPDATE_USER_IMAGE]);
   }
 
   Future<String> createAccount(
@@ -118,9 +128,9 @@ class AuthenticationController extends GetxController {
     Fluttertoast.showToast(
         msg: message,
         toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
+        gravity: ToastGravity.TOP,
         timeInSecForIosWeb: 1,
-        backgroundColor: Colors.black,
+        backgroundColor: Color(0xFFAF6767),
         textColor: Colors.white,
         fontSize: 16.0);
     update();
@@ -141,7 +151,7 @@ class AuthenticationController extends GetxController {
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.TOP,
             timeInSecForIosWeb: 1,
-            backgroundColor: Colors.red,
+            backgroundColor: Color(0xFFAF6767),
             textColor: Colors.white,
             fontSize: 16.0), (r) async {
       token = r;
@@ -172,25 +182,6 @@ class AuthenticationController extends GetxController {
         .pushReplacement(MaterialPageRoute(builder: (_) => const LoginPage()));
   }
 
-  /*Future<void> updateImage(BuildContext context) async {
-    if (userImage == '') {
-      await ClearUserImageUsecase(sl())(currentUser.id!);
-    } else {
-      await UpdateUserImageUsecase(sl())
-          .call(userId: currentUser.id!, file: f!);
-    }
-    await getCurrentUser(currentUser.id!).then((value) =>
-        Fluttertoast.showToast(
-            msg: AppLocalizations.of(context)!.profile_picture_updated,
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 1,
-            backgroundColor: AppColors.toastColor,
-            textColor: AppColors.white,
-            fontSize: 16.0));
-  }
-
-  
   Future<void> sendFrogetPasswordRequest(TextEditingController useremail,
       String destionation, BuildContext context) async {
     String message = '';
@@ -201,16 +192,16 @@ class AuthenticationController extends GetxController {
       useremail.clear();
       message = AppLocalizations.of(context)!.email_sent;
       Navigator.of(context)
-          .push(MaterialPageRoute(builder: (_) => const OTPScreen()));
+          .push(MaterialPageRoute(builder: (_) => const OtpPage()));
     });
 
     Fluttertoast.showToast(
         msg: message,
         toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
+        gravity: ToastGravity.TOP,
         timeInSecForIosWeb: 1,
-        backgroundColor: AppColors.toastColor,
-        textColor: AppColors.white,
+        backgroundColor: Color(0xFFAF6767),
+        textColor: Colors.white,
         fontSize: 16.0);
   }
 
@@ -223,16 +214,25 @@ class AuthenticationController extends GetxController {
           (l) => Fluttertoast.showToast(
               msg: l.message!,
               toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
+              gravity: ToastGravity.TOP,
               timeInSecForIosWeb: 1,
-              backgroundColor: AppColors.toastColor,
-              textColor: AppColors.white,
+              backgroundColor: Color(0xFFAF6767),
+              textColor: Colors.white,
               fontSize: 16.0), (r) {
         otp.clear();
-        Navigator.of(context).push(
-            MaterialPageRoute(builder: (_) => const ResetPasswordScreen()));
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (_) => const ResetPasswordPage()));
       });
     }
+  }
+
+  bool isNumeric(String number) {
+    for (int i = 0; i < number.length; i++) {
+      if (!'0123456789'.contains(number[i])) {
+        return false;
+      }
+    }
+    return true;
   }
 
   Future<void> resetPassword(TextEditingController password,
@@ -245,25 +245,20 @@ class AuthenticationController extends GetxController {
       cpassword.clear();
       message = AppLocalizations.of(context)!.password_reset;
       Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => const LoginScreen()));
+          MaterialPageRoute(builder: (_) => const LoginPage()));
     });
     Fluttertoast.showToast(
         msg: message,
         toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
+        gravity: ToastGravity.TOP,
         timeInSecForIosWeb: 1,
-        backgroundColor: AppColors.toastColor,
-        textColor: AppColors.white,
+        backgroundColor: Color(0xFFAF6767),
+        textColor: Colors.white,
         fontSize: 16.0);
   }
 
- 
-
-  
-
   Future<void> updateProfile(
       {required String address,
-      required TextEditingController email,
       required TextEditingController firstName,
       required TextEditingController lastName,
       required TextEditingController phone,
@@ -272,15 +267,14 @@ class AuthenticationController extends GetxController {
       required String gender,
       required BuildContext context}) async {
     String message = '';
-    final res = await UpdateProfilUsecase(sl())(
-        email: email.text,
+    final res = await UpdateUserUsecase(sl())(
         firstName: firstName.text,
         lastName: lastName.text,
-        address: address,
+        adresse: address,
         phone: phone.text,
         id: id,
         gender: gender,
-        birthDate: birthDate);
+        birthDate: DateTime.parse(birthDate));
     res.fold((l) => message = l.message!, (r) async {
       message = AppLocalizations.of(context)!.profile_updated;
       await getCurrentUser(currentUser.id!);
@@ -290,11 +284,48 @@ class AuthenticationController extends GetxController {
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         timeInSecForIosWeb: 1,
-        backgroundColor: AppColors.toastColor,
-        textColor: AppColors.white,
+        backgroundColor: Colors.black,
+        textColor: Colors.white,
         fontSize: 16.0);
   }
 
+  Future<void> getCurrentUser(String userId) async {
+    final res = await GetUserByIdUsecase(sl())(userId: userId);
+    res.fold(
+        (l) => Fluttertoast.showToast(
+            msg: l.message!,
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.black,
+            textColor: Colors.white,
+            fontSize: 16.0), (r) {
+      currentUser = r;
+      gender = currentUser.gender;
+      birthDate = currentUser.birthDate.toString();
+    });
+    update();
+  }
+
+  Future<void> updateImage(BuildContext context) async {
+    if (userImage == '') {
+      await ClearUserImageUsecase(sl())(currentUser.id!);
+    } else {
+      await UpdateImageUsecase(sl())(image: f!, userId: currentUser.id!);
+    }
+    await getCurrentUser(currentUser.id!).then((value) =>
+        Fluttertoast.showToast(
+            msg: AppLocalizations.of(context)!.profile_picture_updated,
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.black,
+            textColor: Colors.white,
+            fontSize: 16.0));
+  }
+
+  /*
+  
   Future<void> updatePassword(
       TextEditingController currentPassword,
       TextEditingController password,
@@ -388,14 +419,7 @@ class AuthenticationController extends GetxController {
     update();
   }
 
-  bool isNumeric(String number) {
-    for (int i = 0; i < number.length; i++) {
-      if (!'0123456789'.contains(number[i])) {
-        return false;
-      }
-    }
-    return true;
-  }
+  
 
   Future<String?> getRecoveryEmail(String email) async {
     String? result;

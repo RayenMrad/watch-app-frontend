@@ -18,7 +18,7 @@ abstract class CommandRemoteDataSource {
 }
 
 class CommandRemoteDataSourceImpl implements CommandRemoteDataSource {
-  Future<TokenModel> get token async {
+  Future<TokenModel?> get token async {
     return await AuthenticationLocalDataSourceImpl().getUserInformations();
   }
 
@@ -35,7 +35,7 @@ class CommandRemoteDataSourceImpl implements CommandRemoteDataSource {
   @override
   Future<void> createCommand(String userId, List<Sales> sales) async {
     try {
-      String authToken = await token.then((value) => value.token);
+      String authToken = await token.then((value) => value!.token);
       final url = Uri.parse(ApiConst.addCommand);
       final body = jsonEncode({
         'userId': userId,

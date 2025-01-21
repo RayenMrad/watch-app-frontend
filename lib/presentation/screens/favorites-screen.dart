@@ -1,22 +1,23 @@
-import 'package:clean_arch/presentation/screens/cat-screen.dart';
-import 'package:clean_arch/presentation/screens/categories-screen.dart';
 import 'package:clean_arch/presentation/widgets/drawer-contents.dart';
-import 'package:clean_arch/presentation/widgets/grid-container.dart';
 import 'package:clean_arch/presentation/widgets/header.dart';
 import 'package:flutter/material.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class FavoritesScreen extends StatefulWidget {
+  const FavoritesScreen({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<FavoritesScreen> createState() => _FavoritesScreenState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _FavoritesScreenState extends State<FavoritesScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  get itemCount => null;
 
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+
     return Scaffold(
       key: _scaffoldKey, // Assign the key to the Scaffold
       drawer: Drawer(
@@ -27,7 +28,7 @@ class _HomePageState extends State<HomePage> {
           Column(
             children: [
               Header(
-                title: 'Home Page',
+                title: 'Favorites',
                 onMenuPressed: () {
                   _scaffoldKey.currentState?.openDrawer(); // Open the drawer
                 },
@@ -53,7 +54,7 @@ class _HomePageState extends State<HomePage> {
                               child: Column(
                                 children: [
                                   const Text(
-                                    "Discover Timeless Elegance",
+                                    "Your Favorites Watchs",
                                     style: TextStyle(
                                       fontFamily: 'Roboto',
                                       fontSize: 20,
@@ -77,40 +78,38 @@ class _HomePageState extends State<HomePage> {
                                 ],
                               ),
                             ),
-                            // Using the CategoryGridSection widget with dynamic parameters
-                            GridContainerSection(
-                              categoryTitle:
-                                  "Categories", // Dynamic category title
-                              onSeeAllPressed: () {
-                                // Navigation or action when "See All" is pressed
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const CatScreen(),
+                            GridView.builder(
+                              shrinkWrap:
+                                  true, // Important to avoid infinite height issues
+                              physics:
+                                  const NeverScrollableScrollPhysics(), // Disable scrolling for GridView inside SingleChildScrollView
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2, // Number of columns
+                                crossAxisSpacing: 10, // Space between columns
+                                mainAxisSpacing: 10, // Space between rows
+                                childAspectRatio:
+                                    1.0, // Aspect ratio for grid items
+                              ),
+                              itemCount:
+                                  itemCount, // Number of items to show (dynamic)
+                              itemBuilder: (context, index) {
+                                return Card(
+                                  elevation: 5,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      'Item $index', // Content of grid item
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
                                   ),
                                 );
-                                print("Navigate to luxury watches");
                               },
-                              itemCount: 2, // Number of grid items
-                            ),
-                            GridContainerSection(
-                              categoryTitle:
-                                  "Top deals", // Dynamic category title
-                              onSeeAllPressed: () {
-                                // Navigation or action when "See All" is pressed
-
-                                print("Navigate to luxury watches");
-                              },
-                              itemCount: 4, // Number of grid items
-                            ),
-                            GridContainerSection(
-                              categoryTitle:
-                                  "New Arrivals Section", // Dynamic category title
-                              onSeeAllPressed: () {
-                                // Navigation or action when "See All" is pressed
-                                print("Navigate to luxury watches");
-                              },
-                              itemCount: 2, // Number of grid items
                             ),
                           ],
                         ),

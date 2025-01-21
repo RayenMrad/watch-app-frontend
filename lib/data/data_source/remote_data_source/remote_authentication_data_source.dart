@@ -12,6 +12,7 @@ import 'package:clean_arch/domain/enteties/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 
 abstract class AuthenticationRemoteDataSource {
   Future<String> createAccount(
@@ -31,7 +32,6 @@ abstract class AuthenticationRemoteDataSource {
     String id,
     String firstName,
     String lastName,
-    String email,
     String adresse,
     String phone,
     String gender,
@@ -45,12 +45,18 @@ abstract class AuthenticationRemoteDataSource {
 
   Future<User> getOneUser(String userId);
 
-  Future<TokenModel> autoLogin();
+  Future<TokenModel?> autoLogin();
+
+  Future<void> forgetPassword(
+      {required String email, required String destination});
+  Future<void> verifyOTP(String email, int otp);
+  Future<void> resetPassword(String email, String password);
+  Future<void> clearUserImage(String userId);
 }
 
 class AuthenticationRemoteDataSourceImpl
     implements AuthenticationRemoteDataSource {
-  Future<TokenModel> get token async {
+  Future<TokenModel?> get token async {
     return await AuthenticationLocalDataSourceImpl().getUserInformations();
   }
 
@@ -124,7 +130,7 @@ class AuthenticationRemoteDataSourceImpl
       final res = await http.get(uri);
       if (res.statusCode == 200) {
         final body = json.decode(res.body);
-        return body.map((e) => UserModel.fromJson(e)).toList();
+        return UserModel.fromJson(body);
       } else if (res.statusCode == 404) {
         throw UserNotFoundException();
       } else {
@@ -172,8 +178,48 @@ class AuthenticationRemoteDataSourceImpl
   }
 
   @override
-  Future<void> updateImage(String userId, File image) async {
-    try {} catch (e) {}
+  Future<void> updateImage(String userID, File file) async {
+    try {
+      final url =
+          Uri.parse(ApiConst.updateUserImage); // Replace with your API endpoint
+      // Create a multipart request
+      var request = http.MultipartRequest('POST', url);
+
+      // Add fields
+      request.fields['id'] = userID;
+
+      // Add the file
+      var fileName = file.path.split('/').last;
+      request.files.add(
+        await http.MultipartFile.fromPath(
+          'file', // This should match the field name expected by the server
+          file.path,
+          contentType: MediaType('image', 'jpeg'),
+        ),
+      );
+
+      // Send the request
+      var response = await request.send();
+    } catch (e) {
+      throw ServerException(message: 'cannot update image');
+    }
+  }
+
+  @override
+  Future<void> clearUserImage(String userId) async {
+    try {
+      Map<String, dynamic> model = {'id': userId, 'image': ''};
+      await http.put(
+        Uri.parse(ApiConst.updateUser),
+        body: model,
+        headers: {
+          "authorization":
+              "Bearer ${await token.then((value) => value!.token)}",
+        },
+      );
+    } catch (e) {
+      throw ServerException(message: 'cannot update profile');
+    }
   }
 
   @override
@@ -189,7 +235,7 @@ class AuthenticationRemoteDataSourceImpl
         'newPassword': newPassword
       };
 
-      String authToken = await token.then((value) => value.token);
+      String authToken = await token.then((value) => value!.token);
 
       final url = Uri.parse(ApiConst.updateUserPassword);
       final res = await http.post(
@@ -217,7 +263,6 @@ class AuthenticationRemoteDataSourceImpl
     String id,
     String firstName,
     String lastName,
-    String email,
     String adresse,
     String phone,
     String gender,
@@ -227,14 +272,13 @@ class AuthenticationRemoteDataSourceImpl
       Map<String, dynamic> userModel = {
         'firstName': firstName,
         'lastName': lastName,
-        'email': email,
         'adresse': adresse,
         'phone': phone,
         'gender': gender,
-        'birthDate': birthDate,
+        'birthDate': birthDate.toString(),
       };
 
-      String authToken = await token.then((value) => value.token);
+      String authToken = await token.then((value) => value!.token);
       final url = Uri.parse('${ApiConst.updateUser}/$id');
       final res = await http.put(
         url,
@@ -253,11 +297,81 @@ class AuthenticationRemoteDataSourceImpl
   }
 
   @override
-  Future<TokenModel> autoLogin() async {
+  Future<TokenModel?> autoLogin() async {
     try {
       return await token;
     } catch (e) {
       print(e);
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> forgetPassword(
+      {required String email, required String destination}) async {
+    try {
+      AppLocalizations t =
+          await AppLocalizations.delegate.load(Locale(await locale));
+      final response = await http.post(
+        Uri.parse(ApiConst.forgetPassword),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({"email": email, "destination": destination}),
+      );
+
+      if (response.statusCode == 404) {
+        throw DataNotFoundException(t.email_not_registred);
+      } else if (response.statusCode == 500) {
+        throw ServerException(message: "server error");
+      } else if (response.statusCode != 200) {
+        throw Exception("Unexpected error: ${response.statusCode}");
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> resetPassword(String email, String password) async {
+    try {
+      AppLocalizations t =
+          await AppLocalizations.delegate.load(Locale(await locale));
+      final response = await http.post(
+        Uri.parse(ApiConst.resetPassword),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({"email": email, "password": password}),
+      );
+
+      if (response.statusCode == 404) {
+        throw DataNotFoundException(t.email_not_registred);
+      } else if (response.statusCode == 500) {
+        throw ServerException(message: "error");
+      } else if (response.statusCode != 200) {
+        throw Exception("Unexpected error: ${response.statusCode}");
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> verifyOTP(String email, int otp) async {
+    try {
+      AppLocalizations t =
+          await AppLocalizations.delegate.load(Locale(await locale));
+      final response = await http.post(
+        Uri.parse(ApiConst.verifyOTP),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({"email": email, "otp": otp}),
+      );
+
+      if (response.statusCode == 404) {
+        throw BadOTPException(t.code_invalid);
+      } else if (response.statusCode == 400) {
+        throw BadOTPException(t.expired_code);
+      } else if (response.statusCode != 200) {
+        throw Exception("Unexpected error: ${response.statusCode}");
+      }
+    } catch (e) {
       rethrow;
     }
   }

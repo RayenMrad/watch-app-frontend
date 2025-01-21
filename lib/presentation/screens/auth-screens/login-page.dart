@@ -1,4 +1,5 @@
 import 'package:clean_arch/presentation/controller/authentication_controller.dart';
+import 'package:clean_arch/presentation/screens/auth-screens/forget-password.dart';
 import 'package:clean_arch/presentation/screens/home-screen.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -148,6 +149,13 @@ class _LoginPageState extends State<LoginPage> {
                               child: TextButton(
                                 onPressed: () {
                                   // Add your "forgot password" logic here
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          ForgetPasswordPage(),
+                                    ),
+                                  );
                                 },
                                 child: const Text(
                                   'Forgot Password?',

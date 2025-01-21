@@ -1,11 +1,11 @@
 import 'package:clean_arch/core/error/failures/failures.dart';
-import 'package:clean_arch/domain/enteties/token.dart';
 import 'package:clean_arch/domain/repository/authentication_repository.dart';
 import 'package:dartz/dartz.dart';
 
-class AutoLoginUsecase {
+class ClearUserImageUsecase {
   final AuthenticationRepository repository;
 
-  const AutoLoginUsecase(this.repository);
-  Future<Either<Failure, Token?>> call() async => await repository.autologin();
+  ClearUserImageUsecase(this.repository);
+  Future<Either<Failure, Unit>> call(String userId) async =>
+      await repository.clearUserImage(userId);
 }

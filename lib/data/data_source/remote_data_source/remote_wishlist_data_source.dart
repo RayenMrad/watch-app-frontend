@@ -19,7 +19,7 @@ abstract class WishlistRemoteDataSource {
 }
 
 class WishlistRemoteDataSourceImpl implements WishlistRemoteDataSource {
-  Future<TokenModel> get token async {
+  Future<TokenModel?> get token async {
     return await AuthenticationLocalDataSourceImpl().getUserInformations();
   }
 
@@ -47,7 +47,7 @@ class WishlistRemoteDataSourceImpl implements WishlistRemoteDataSource {
   @override
   Future<void> deleteWishlist({required String wishlistId}) async {
     try {
-      String authToken = await token.then((value) => value.token);
+      String authToken = await token.then((value) => value!.token);
       final url = Uri.parse('${ApiConst.deleteWishList}/$wishlistId');
       final res = await http.delete(
         url,

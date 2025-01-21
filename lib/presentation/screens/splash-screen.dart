@@ -77,18 +77,22 @@ class _SplashScreenState extends State<SplashScreen>
       res = false;
     }, (r) async {
       print(r.toString());
-      authController.token = r;
-      print(r.token);
-      // final user = await GetUserByIdUsecase(sl()).call(userId: r.userId);
-      // user.fold((l) {
-      //   res = false;
-      // }, (r) async {
-      //   authController.currentUser = r;
-      // await wishListController
-      //     .getUserWishlist(authController.currentUser.id!);
-      // await cartController.getUserCart(authController.currentUser.id!);
-      // Get.put(NotificationsController());
-      // });
+      if (r != null) {
+        authController.token = r;
+        final user = await GetUserByIdUsecase(sl()).call(userId: r.userId);
+        user.fold((l) {
+          res = false;
+        }, (r) async {
+          authController.currentUser = r;
+          // await wishListController
+          //     .getUserWishlist(authController.currentUser.id!);
+          // await cartController.getUserCart(authController.currentUser.id!);
+          // Get.put(NotificationsController());
+        });
+        print(authController.currentUser.birthDate);
+      } else {
+        res = false;
+      }
     });
     Future.delayed(Duration(seconds: duration), () {
       Navigator.pushReplacement(

@@ -9,6 +9,9 @@ class ApiConst {
   static const updateUserPassword = '$baseUrl/updatePassword';
   static const updateUserImage = '$baseUrl/updateImage';
   static const refreshToken = "$baseUrl/refreshtoken";
+  static const forgetPassword = "$baseUrl/forgetPassword";
+  static const verifyOTP = "$baseUrl/verifCode";
+  static const resetPassword = "$baseUrl/resetPassword";
 
   //watchs apis
   // static const addWatch = '$baseUrl/watch/add';

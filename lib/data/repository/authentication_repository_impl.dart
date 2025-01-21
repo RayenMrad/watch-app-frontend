@@ -101,22 +101,21 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       {required String id,
       required String firstName,
       required String lastName,
-      required String email,
       required String adresse,
       required String phone,
       required String gender,
       required DateTime birthDate}) async {
     try {
       await authenticationRemoteDataSource.updateUser(
-          id, firstName, lastName, email, adresse, phone, gender, birthDate);
+          id, firstName, lastName, adresse, phone, gender, birthDate);
       return const Right(unit);
-    } on ServerException {
-      return Left(ServerFailure());
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message));
     }
   }
 
   @override
-  Future<Either<Failure, Token>> autologin() async {
+  Future<Either<Failure, Token?>> autologin() async {
     try {
       final tk = await authenticationRemoteDataSource.autoLogin();
       return right(tk);
@@ -132,6 +131,52 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       return right(unit);
     } catch (e) {
       return left(LocalStorageFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> forgetPassword(
+      {required String email, required String destination}) async {
+    try {
+      await authenticationRemoteDataSource.forgetPassword(
+          email: email, destination: destination);
+      return const Right(unit);
+    } on DataNotFoundException catch (e) {
+      return Left(DataNotFoundFailure(e.message));
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> resetPassword(
+      {required String email, required String password}) async {
+    try {
+      await authenticationRemoteDataSource.resetPassword(email, password);
+      return const Right(unit);
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> verifyOTP(
+      {required String email, required int otp}) async {
+    try {
+      await authenticationRemoteDataSource.verifyOTP(email, otp);
+      return const Right(unit);
+    } on BadOTPException catch (e) {
+      return Left(BadOTPFailure(e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> clearUserImage(String userId) async {
+    try {
+      await authenticationRemoteDataSource.clearUserImage(userId);
+      return const Right(unit);
+    } on ServerException {
+      return Left(ServerFailure());
     }
   }
 }

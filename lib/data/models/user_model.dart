@@ -24,8 +24,10 @@ class UserModel extends User {
       adresse: json['adresse'],
       phone: json['phone'],
       gender: json['gender'],
-      birthDate: json['birthDate'],
-      commandHistory: json['commandHistory'],
+      birthDate: DateTime.parse(json['birthDate']),
+      commandHistory: (json['commandHistory'] as List<dynamic>)
+          .map((e) => e.toString())
+          .toList(),
       password: json['password']);
 
   Map<String, dynamic> tojson() => {

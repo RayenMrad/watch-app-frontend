@@ -18,7 +18,7 @@ abstract class CartRemoteDataSource {
 }
 
 class CartRemoteDataSourceImpl implements CartRemoteDataSource {
-  Future<TokenModel> get token async {
+  Future<TokenModel?> get token async {
     return await AuthenticationLocalDataSourceImpl().getUserInformations();
   }
 
@@ -65,7 +65,7 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
   @override
   Future<void> updateCart({required CartModel cart}) async {
     try {
-      String authToken = await token.then((value) => value.token);
+      String authToken = await token.then((value) => value!.token);
       final url = Uri.parse(ApiConst.updateCart);
       final body = jsonEncode({"id": cart.id, "sales": cart.sales});
       final res = await http.put(

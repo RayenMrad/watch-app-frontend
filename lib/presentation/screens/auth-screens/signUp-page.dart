@@ -3,6 +3,7 @@ import 'package:clean_arch/presentation/widgets/inputs/input-password.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -92,6 +93,15 @@ class _SignUpPageState extends State<SignUpPage> {
                                   child: Container(
                                     height: 40,
                                     child: TextFormField(
+                                      controller: firstNameController,
+                                      validator: (v) {
+                                        if (v!.isEmpty) {
+                                          return AppLocalizations.of(context)!
+                                              .first_name_required;
+                                        } else {
+                                          return null;
+                                        }
+                                      },
                                       decoration: InputDecoration(
                                         labelText: 'First Name',
                                         border: OutlineInputBorder(
@@ -109,6 +119,15 @@ class _SignUpPageState extends State<SignUpPage> {
                                   child: Container(
                                     height: 40,
                                     child: TextFormField(
+                                      controller: lastNameController,
+                                      validator: (v) {
+                                        if (v!.isEmpty) {
+                                          return AppLocalizations.of(context)!
+                                              .last_name_required;
+                                        } else {
+                                          return null;
+                                        }
+                                      },
                                       decoration: InputDecoration(
                                         labelText: 'Last Name',
                                         border: OutlineInputBorder(
@@ -127,6 +146,15 @@ class _SignUpPageState extends State<SignUpPage> {
                             Container(
                               height: 40,
                               child: TextFormField(
+                                controller: emailController,
+                                validator: (v) {
+                                  if (!v!.endsWith("@gmail.com") || v.isEmpty) {
+                                    return AppLocalizations.of(context)!
+                                        .invalid_email_address;
+                                  } else {
+                                    return null;
+                                  }
+                                },
                                 decoration: InputDecoration(
                                   labelText: 'Email',
                                   hintText: 'Example@gmail.com',
@@ -142,6 +170,15 @@ class _SignUpPageState extends State<SignUpPage> {
                             Container(
                               height: 40,
                               child: TextFormField(
+                                controller: adresseController,
+                                validator: (v) {
+                                  if (v!.isEmpty) {
+                                    return AppLocalizations.of(context)!
+                                        .address_required;
+                                  } else {
+                                    return null;
+                                  }
+                                },
                                 decoration: InputDecoration(
                                   labelText: 'Address',
                                   hintText:
@@ -158,6 +195,15 @@ class _SignUpPageState extends State<SignUpPage> {
                             Container(
                               height: 40,
                               child: TextFormField(
+                                controller: phoneController,
+                                validator: (v) {
+                                  if (v!.isEmpty || v!.length < 8) {
+                                    return AppLocalizations.of(context)!
+                                        .phone_number_equired;
+                                  } else {
+                                    return null;
+                                  }
+                                },
                                 decoration: InputDecoration(
                                   labelText: 'Phone',
                                   hintText: '+21672000000',
@@ -282,22 +328,11 @@ class _SignUpPageState extends State<SignUpPage> {
                                           await controller.createAccount(
                                               cpassword:
                                                   confirmPasswordController,
-                                              email: TextEditingController.fromValue(
-                                                  TextEditingValue(
-                                                      text: "rayen@gmail.com")),
-                                              firstName:
-                                                  TextEditingController.fromValue(
-                                                      TextEditingValue(
-                                                          text: "rayen")),
-                                              adresse: TextEditingController.fromValue(
-                                                  TextEditingValue(
-                                                      text: "borjboukhlifa")),
-                                              phone:
-                                                  TextEditingController.fromValue(
-                                                      TextEditingValue(
-                                                          text: "75000000")),
-                                              lastName: TextEditingController.fromValue(
-                                                  TextEditingValue(text: "mrad")),
+                                              email: emailController,
+                                              firstName: firstNameController,
+                                              adresse: adresseController,
+                                              phone: phoneController,
+                                              lastName: lastNameController,
                                               password: passwordController,
                                               context: context);
                                         } else {
@@ -305,9 +340,10 @@ class _SignUpPageState extends State<SignUpPage> {
                                               msg: AppLocalizations.of(context)!
                                                   .missing_data,
                                               toastLength: Toast.LENGTH_SHORT,
-                                              gravity: ToastGravity.BOTTOM,
+                                              gravity: ToastGravity.TOP,
                                               timeInSecForIosWeb: 1,
-                                              backgroundColor: Colors.black,
+                                              backgroundColor:
+                                                  Color(0xFFAF6767),
                                               textColor: Colors.white,
                                               fontSize: 16.0);
                                         }

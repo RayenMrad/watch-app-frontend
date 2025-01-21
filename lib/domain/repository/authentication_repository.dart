@@ -24,7 +24,6 @@ abstract class AuthenticationRepository {
     required String id,
     required String firstName,
     required String lastName,
-    required String email,
     required String adresse,
     required String phone,
     required String gender,
@@ -44,6 +43,17 @@ abstract class AuthenticationRepository {
 
   Future<Either<Failure, User>> getUserById({required String userId});
 
-  Future<Either<Failure, Token>> autologin();
+  Future<Either<Failure, Token?>> autologin();
   Future<Either<Failure, Unit>> logout();
+
+  Future<Either<Failure, Unit>> resetPassword(
+      {required String email, required String password});
+
+  Future<Either<Failure, Unit>> forgetPassword(
+      {required String email, required String destination});
+
+  Future<Either<Failure, Unit>> verifyOTP(
+      {required String email, required int otp});
+
+  Future<Either<Failure, Unit>> clearUserImage(String userId);
 }
