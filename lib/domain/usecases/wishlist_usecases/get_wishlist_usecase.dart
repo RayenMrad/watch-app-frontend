@@ -4,10 +4,10 @@ import 'package:clean_arch/domain/repository/wishlist_repository.dart';
 import 'package:dartz/dartz.dart';
 
 class GetWishlistUsecase {
-  final WishlistRepository _repository;
+  final WishlistRepository _wishlistRepository;
 
-  const GetWishlistUsecase(this._repository);
+  const GetWishlistUsecase(this._wishlistRepository);
 
   Future<Either<Failure, Wishlist>> call({required String wishlistId}) async =>
-      await _repository.getWishList(wishlistId: wishlistId);
+      await _wishlistRepository.getWishList(wishlistId: wishlistId);
 }

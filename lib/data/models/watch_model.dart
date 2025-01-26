@@ -8,16 +8,18 @@ class WatchModel extends Watch {
       required super.image,
       required super.price,
       required super.brand,
+      required super.category,
       required super.reference,
       required super.description,
       required super.size});
 
   factory WatchModel.fromJson(Map<String, dynamic> json) => WatchModel(
-      id: json['id'],
+      id: json['_id'],
       name: json['name'],
       image: json['image'],
       price: double.parse(json['price'].toString()),
       brand: json['brand'],
+      category: json['category'],
       reference: json['reference'],
       description: json['description'],
       size: json['size']);
@@ -28,6 +30,7 @@ class WatchModel extends Watch {
         'image': image,
         'price': price,
         'brand': brand,
+        'category': category,
         'reference': reference,
         'description': description,
         'size': size,

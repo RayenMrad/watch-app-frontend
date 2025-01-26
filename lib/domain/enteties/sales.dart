@@ -1,11 +1,11 @@
 class Sales {
   final String id;
-  final int quantity;
-  final double totalprice;
+  int quantity;
+  double totalprice;
   final String userId;
   final String variantId;
 
-  const Sales(
+  Sales(
       {required this.id,
       required this.quantity,
       required this.totalprice,

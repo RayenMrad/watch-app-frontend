@@ -3,7 +3,7 @@ import 'package:clean_arch/domain/enteties/cart.dart';
 import 'package:dartz/dartz.dart';
 
 abstract class CartRepository {
-  Future<Either<Failure, Cart>> getCart({required String cartId});
+  Future<Either<Failure, Cart>> getCart({required String userId});
 
   Future<Either<Failure, Unit>> createCart({required String userId});
 

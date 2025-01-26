@@ -1,7 +1,7 @@
 import 'package:clean_arch/domain/enteties/sales.dart';
 
 class SalesModel extends Sales {
-  const SalesModel(
+  SalesModel(
       {required super.id,
       required super.quantity,
       required super.totalprice,

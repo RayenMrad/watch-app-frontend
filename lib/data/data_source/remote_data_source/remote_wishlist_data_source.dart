@@ -6,15 +6,13 @@ import 'package:clean_arch/data/data_source/local_data_source/authentication_loc
 import 'package:clean_arch/data/data_source/local_data_source/settings_local_data_source.dart';
 import 'package:clean_arch/data/models/token_model.dart';
 import 'package:clean_arch/data/models/wishlist_model.dart';
-import 'package:clean_arch/domain/enteties/watch.dart';
 import 'package:clean_arch/domain/enteties/wishlist.dart';
-import 'package:dartz/dartz.dart';
 import 'package:http/http.dart' as http;
 
 abstract class WishlistRemoteDataSource {
   Future<WishlistModel> getWishList({required String wishlistId});
   Future<void> createWishList({required String userId});
-  Future<void> updateWishlist({required Wishlist wishlist});
+  Future<void> updateWishlist({required WishlistModel wishlist});
   Future<void> deleteWishlist({required String wishlistId});
 }
 
@@ -67,13 +65,13 @@ class WishlistRemoteDataSourceImpl implements WishlistRemoteDataSource {
   @override
   Future<WishlistModel> getWishList({required String wishlistId}) async {
     try {
-      final uri = Uri.parse(ApiConst.getOneWishList);
+      final uri = Uri.parse('${ApiConst.getOneWishList}/$wishlistId');
       final res = await http.get(uri);
       if (res.statusCode == 200) {
         final body = json.decode(res.body);
-        return body.map((e) => WishlistModel.fromJson(e));
+        return WishlistModel.fromJson(body);
       } else if (res.statusCode == 404) {
-        throw ProductNotFoundException();
+        throw WishlistNotFoundException();
       } else {
         throw ServerException();
       }
@@ -83,7 +81,7 @@ class WishlistRemoteDataSourceImpl implements WishlistRemoteDataSource {
   }
 
   @override
-  Future<void> updateWishlist({required Wishlist wishlist}) async {
+  Future<void> updateWishlist({required WishlistModel wishlist}) async {
     try {
       final authToken = await token.then((value) => value!.token);
 

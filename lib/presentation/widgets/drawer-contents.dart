@@ -1,7 +1,10 @@
 import 'package:clean_arch/presentation/controller/authentication_controller.dart';
 import 'package:clean_arch/presentation/screens/auth-screens/login-page.dart';
-import 'package:clean_arch/presentation/screens/edit-profile-screen.dart';
+import 'package:clean_arch/presentation/screens/auth-screens/update-password-screen.dart';
+import 'package:clean_arch/presentation/screens/profile-screens/edit-profile-screen.dart';
+import 'package:clean_arch/presentation/screens/favorites-screen.dart';
 import 'package:clean_arch/presentation/screens/home-screen.dart';
+import 'package:clean_arch/presentation/screens/profile-screens/profile-screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -24,45 +27,56 @@ class DrawerContents extends StatelessWidget {
           Column(
             children: [
               //top container
-              UserAccountsDrawerHeader(
-                decoration: BoxDecoration(color: Colors.black),
-                accountName: Text(
-                  "userFirstName",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                      fontFamily: 'Libre Baskerville'),
-                ),
-                //userFirstName
-                accountEmail: Text(
-                  "userEmail",
-                  style: TextStyle(
-                      fontWeight: FontWeight.w200,
-                      fontSize: 15,
-                      fontFamily: 'Libre Baskerville',
-                      color: Color(0xFF858585)),
-                ),
-                //userEmail
-                currentAccountPicture: Container(
-                  height: 200, // Height for the CircleAvatar container
-                  width: 200, // Width for the CircleAvatar container
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle, // Ensures it's a circle
-                    color: const Color(0xFF858585), // Default gray background
-                  ),
-                  child: CircleAvatar(
-                      radius: 50,
-                      backgroundColor: Colors.grey[300],
-                      backgroundImage:
-                          userImage != null ? FileImage(userImage!) : null,
-                      child: userImage == null
-                          ? const Icon(
-                              Icons.camera,
-                              color: Colors.black54,
-                            )
-                          : null),
-                ),
-              ),
+              GetBuilder<AuthenticationController>(builder: (controller) {
+                return UserAccountsDrawerHeader(
+                    decoration: BoxDecoration(color: Colors.black),
+                    accountName: Text(
+                      controller.currentUser.firstName,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          fontFamily: 'Libre Baskerville'),
+                    ),
+                    //userFirstName
+                    accountEmail: Text(
+                      controller.currentUser.email,
+                      style: TextStyle(
+                          fontWeight: FontWeight.w200,
+                          fontSize: 15,
+                          fontFamily: 'Libre Baskerville',
+                          color: Color(0xFF858585)),
+                    ),
+                    //userEmail
+                    currentAccountPicture: Container(
+                      height: 200, // Height for the CircleAvatar container
+                      width: 200, // Width for the CircleAvatar container
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle, // Ensures it's a circle
+                        color:
+                            const Color(0xFF858585), // Default gray background
+                      ),
+                      child: CircleAvatar(
+                        radius: 50,
+                        backgroundColor: Colors.grey[300],
+                        backgroundImage:
+                            userImage != null ? FileImage(userImage!) : null,
+                        child: userImage == null
+                            ? controller.currentUser.image != null
+                                ? ClipOval(
+                                    child: Image.network(
+                                      controller.currentUser.image!,
+                                      fit: BoxFit.cover,
+                                      width:
+                                          100, // Match the diameter of the CircleAvatar (2 * radius)
+                                      height: 100,
+                                    ),
+                                  )
+                                : Icon(Icons.person,
+                                    size: 50, color: Colors.grey)
+                            : null,
+                      ),
+                    ));
+              }),
               ListTile(
                 leading: Icon(
                   Icons.home_outlined,
@@ -76,7 +90,11 @@ class DrawerContents extends StatelessWidget {
                       fontWeight: FontWeight.w600,
                       fontSize: 20),
                 ),
-                onTap: () => HomePage(),
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => HomePage(),
+                  ),
+                ),
               ),
               SizedBox(
                 height: 20,
@@ -97,7 +115,7 @@ class DrawerContents extends StatelessWidget {
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (_) => EditProfilePage(),
+                      builder: (_) => ProfilePage(),
                     ),
                   );
                 },
@@ -121,7 +139,8 @@ class DrawerContents extends StatelessWidget {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => HomePage()),
+                      MaterialPageRoute(
+                          builder: (context) => FavoritesScreen()),
                     );
                   }),
               SizedBox(
@@ -160,6 +179,30 @@ class DrawerContents extends StatelessWidget {
                 ),
                 onTap: () => null,
               ),
+
+              SizedBox(
+                height: 20,
+              ),
+              ListTile(
+                  leading: Icon(
+                    Icons.password_outlined,
+                    size: 30,
+                    color: Colors.black54,
+                  ),
+                  title: Text(
+                    "Update Password",
+                    style: TextStyle(
+                        fontFamily: 'Roboto',
+                        fontWeight: FontWeight.w600,
+                        fontSize: 20),
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => UpdatePasswordPage()),
+                    );
+                  }),
               Spacer(),
               Divider(),
               SizedBox(

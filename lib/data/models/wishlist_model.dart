@@ -6,10 +6,11 @@ class WishlistModel extends Wishlist {
       {required super.id, required super.userId, required super.watchs});
 
   factory WishlistModel.fromJson(Map<String, dynamic> json) => WishlistModel(
-      id: json['id'],
+      id: json['_id'],
       userId: json['userId'],
-      watchs: (json['watchs'] as List).map((e) => e.toString()).toList());
+      watchs:
+          (json['watches'] as List<dynamic>).map((e) => e.toString()).toList());
 
   Map<String, dynamic> toJson() =>
-      {"_id": id, "userId": userId, "watchs": watchs.map((e) => id).toList()};
+      {"_id": id, "userId": userId, "watches": watchs.map((e) => id).toList()};
 }

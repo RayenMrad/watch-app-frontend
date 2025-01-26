@@ -1,6 +1,6 @@
 import 'package:clean_arch/presentation/widgets/drawer-contents.dart';
 import 'package:clean_arch/presentation/widgets/grid-container.dart';
-import 'package:clean_arch/presentation/widgets/header.dart';
+import 'package:clean_arch/presentation/widgets/headers/header.dart';
 import 'package:flutter/material.dart';
 
 class CategoriesScreen extends StatefulWidget {

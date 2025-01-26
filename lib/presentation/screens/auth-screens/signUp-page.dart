@@ -1,4 +1,5 @@
 import 'package:clean_arch/presentation/controller/authentication_controller.dart';
+import 'package:clean_arch/presentation/widgets/inputs/form-input.dart';
 import 'package:clean_arch/presentation/widgets/inputs/input-password.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -90,129 +91,85 @@ class _SignUpPageState extends State<SignUpPage> {
                               children: [
                                 // First name
                                 Expanded(
-                                  child: Container(
-                                    height: 40,
-                                    child: TextFormField(
-                                      controller: firstNameController,
-                                      validator: (v) {
-                                        if (v!.isEmpty) {
-                                          return AppLocalizations.of(context)!
-                                              .first_name_required;
-                                        } else {
-                                          return null;
-                                        }
-                                      },
-                                      decoration: InputDecoration(
-                                        labelText: 'First Name',
-                                        border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(5),
-                                        ),
-                                        prefixIcon: const Icon(Icons.person),
-                                      ),
-                                    ),
-                                  ),
-                                ),
+                                    child: FormInput(
+                                  text: "First Name",
+                                  controller: firstNameController,
+                                  validator: (v) {
+                                    if (v!.isEmpty) {
+                                      return AppLocalizations.of(context)!
+                                          .first_name_required;
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                  prefixIcon: const Icon(Icons.person),
+                                )),
                                 const SizedBox(width: 10),
                                 // Last name
                                 Expanded(
-                                  child: Container(
-                                    height: 40,
-                                    child: TextFormField(
-                                      controller: lastNameController,
-                                      validator: (v) {
-                                        if (v!.isEmpty) {
-                                          return AppLocalizations.of(context)!
-                                              .last_name_required;
-                                        } else {
-                                          return null;
-                                        }
-                                      },
-                                      decoration: InputDecoration(
-                                        labelText: 'Last Name',
-                                        border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(5),
-                                        ),
-                                        prefixIcon: const Icon(Icons.person),
-                                      ),
-                                    ),
-                                  ),
-                                ),
+                                    child: FormInput(
+                                  text: "Last Name",
+                                  controller: lastNameController,
+                                  validator: (v) {
+                                    if (v!.isEmpty) {
+                                      return AppLocalizations.of(context)!
+                                          .last_name_required;
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                  prefixIcon: const Icon(Icons.person),
+                                )),
                               ],
                             ),
                             const SizedBox(height: 20),
                             // Email
-                            Container(
-                              height: 40,
-                              child: TextFormField(
-                                controller: emailController,
-                                validator: (v) {
-                                  if (!v!.endsWith("@gmail.com") || v.isEmpty) {
-                                    return AppLocalizations.of(context)!
-                                        .invalid_email_address;
-                                  } else {
-                                    return null;
-                                  }
-                                },
-                                decoration: InputDecoration(
-                                  labelText: 'Email',
-                                  hintText: 'Example@gmail.com',
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                  prefixIcon: const Icon(Icons.email),
-                                ),
-                              ),
+                            FormInput(
+                              text: 'Email',
+                              controller: emailController,
+                              validator: (v) {
+                                if (!v!.endsWith("@gmail.com") || v.isEmpty) {
+                                  return AppLocalizations.of(context)!
+                                      .invalid_email_address;
+                                } else {
+                                  return null;
+                                }
+                              },
+                              prefixIcon: const Icon(Icons.email),
+                              hint: 'Example@gmail.com',
                             ),
                             const SizedBox(height: 20),
                             // Address
-                            Container(
-                              height: 40,
-                              child: TextFormField(
-                                controller: adresseController,
-                                validator: (v) {
-                                  if (v!.isEmpty) {
-                                    return AppLocalizations.of(context)!
-                                        .address_required;
-                                  } else {
-                                    return null;
-                                  }
-                                },
-                                decoration: InputDecoration(
-                                  labelText: 'Address',
-                                  hintText:
-                                      'Avenue Habib Bourguiba, Tunis 1000, Tunisia',
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                  prefixIcon: const Icon(Icons.location_on),
-                                ),
-                              ),
+                            FormInput(
+                              text: "Address",
+                              controller: adresseController,
+                              validator: (v) {
+                                if (v!.isEmpty) {
+                                  return AppLocalizations.of(context)!
+                                      .address_required;
+                                } else {
+                                  return null;
+                                }
+                              },
+                              prefixIcon: const Icon(Icons.location_on),
+                              hint:
+                                  'Avenue Habib Bourguiba, Tunis 1000, Tunisia',
                             ),
                             const SizedBox(height: 20),
                             // Phone
-                            Container(
-                              height: 40,
-                              child: TextFormField(
-                                controller: phoneController,
-                                validator: (v) {
-                                  if (v!.isEmpty || v!.length < 8) {
-                                    return AppLocalizations.of(context)!
-                                        .phone_number_equired;
-                                  } else {
-                                    return null;
-                                  }
-                                },
-                                decoration: InputDecoration(
-                                  labelText: 'Phone',
-                                  hintText: '+21672000000',
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                  prefixIcon: const Icon(Icons.phone),
-                                ),
-                              ),
+                            FormInput(
+                              text: "Phone",
+                              controller: phoneController,
+                              validator: (v) {
+                                if (v!.isEmpty || v!.length < 8) {
+                                  return AppLocalizations.of(context)!
+                                      .phone_number_equired;
+                                } else {
+                                  return null;
+                                }
+                              },
+                              prefixIcon: const Icon(Icons.phone),
+                              hint: '+216 72 000 000',
                             ),
                             const SizedBox(height: 20),
                             Row(

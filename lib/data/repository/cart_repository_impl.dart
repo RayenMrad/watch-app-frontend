@@ -22,9 +22,9 @@ class CartRepositoryImpl implements CartRepository {
   }
 
   @override
-  Future<Either<Failure, Cart>> getCart({required String cartId}) async {
+  Future<Either<Failure, Cart>> getCart({required String userId}) async {
     try {
-      final result = await cartRemoteDataSource.getCart(cartId: cartId);
+      final result = await cartRemoteDataSource.getCart(userId: userId);
       return right(result);
     } on ServerException catch (e) {
       return left(ServerFailure(message: e.message));

@@ -39,6 +39,11 @@ class SalesNotFoundException implements Exception {
   SalesNotFoundException([this.message = "Sales Not Found"]);
 }
 
+class WishlistNotFoundException implements Exception {
+  final String? message;
+  WishlistNotFoundException([this.message = "Wishlist Not Found"]);
+}
+
 class RefreshTokenException implements Exception {}
 
 class BadOTPException implements Exception {

@@ -8,6 +8,6 @@ class GetCartByIdUsecase {
 
   const GetCartByIdUsecase(this._cartRepository);
 
-  Future<Either<Failure, Cart>> call({required String cartId}) async =>
-      _cartRepository.getCart(cartId: cartId);
+  Future<Either<Failure, Cart>> call({required String userId}) async =>
+      _cartRepository.getCart(userId: userId);
 }

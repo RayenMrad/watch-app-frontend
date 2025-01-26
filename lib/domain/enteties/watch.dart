@@ -4,9 +4,10 @@ class Watch {
   final String image;
   final double price;
   final String brand;
+  final String category;
   final String reference;
   final String description;
-  final int size;
+  final String size;
 
   const Watch(
       {required this.id,
@@ -14,6 +15,7 @@ class Watch {
       required this.image,
       required this.price,
       required this.brand,
+      required this.category,
       required this.reference,
       required this.description,
       required this.size});

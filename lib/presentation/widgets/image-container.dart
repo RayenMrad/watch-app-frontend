@@ -9,7 +9,9 @@ import 'package:get/get.dart';
 class ImageContainer extends StatelessWidget {
   final String? imageUrl;
 
-  const ImageContainer({super.key, this.imageUrl});
+  final bool? edit;
+
+  const ImageContainer({super.key, this.imageUrl, this.edit});
 
   @override
   Widget build(BuildContext context) {
@@ -41,31 +43,32 @@ class ImageContainer extends StatelessWidget {
                   radius: 60.r,
                 ),
               ),
-              Positioned(
-                bottom: 0,
-                right: 0,
-                child: GestureDetector(
-                  onTap: () async {
-                    await showDialog(
-                        context: context,
-                        builder: (_) => const ProfileImageDialog());
-                  },
-                  child: Container(
-                    height: 35,
-                    width: 35,
-                    decoration: BoxDecoration(
-                      color: Colors.blue,
-                      shape: BoxShape.circle,
-                      border: Border.all(width: 2, color: Colors.white),
-                    ),
-                    child: const Icon(
-                      Icons.camera_alt,
-                      color: Colors.white,
-                      size: 20,
+              if (edit == true)
+                Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: GestureDetector(
+                    onTap: () async {
+                      await showDialog(
+                          context: context,
+                          builder: (_) => const ProfileImageDialog());
+                    },
+                    child: Container(
+                      height: 35,
+                      width: 35,
+                      decoration: BoxDecoration(
+                        color: Colors.blue,
+                        shape: BoxShape.circle,
+                        border: Border.all(width: 2, color: Colors.white),
+                      ),
+                      child: const Icon(
+                        Icons.camera_alt,
+                        color: Colors.white,
+                        size: 20,
+                      ),
                     ),
                   ),
                 ),
-              ),
             ],
           );
         });

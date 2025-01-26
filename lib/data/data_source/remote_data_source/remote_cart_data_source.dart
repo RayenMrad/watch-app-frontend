@@ -14,7 +14,7 @@ abstract class CartRemoteDataSource {
   Future<void> createCart({required String userId});
   Future<void> updateCart({required CartModel cart});
   // Future<void> updateCart(String cartId, List<String> sales);
-  Future<CartModel> getCart({required String cartId});
+  Future<CartModel> getCart({required String userId});
 }
 
 class CartRemoteDataSourceImpl implements CartRemoteDataSource {
@@ -45,9 +45,9 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
   }
 
   @override
-  Future<CartModel> getCart({required String cartId}) async {
+  Future<CartModel> getCart({required String userId}) async {
     try {
-      final url = Uri.parse('${ApiConst.getOneCart}/$cartId');
+      final url = Uri.parse('${ApiConst.getOneCart}/$userId');
       final res = await http.get(url);
       if (res.statusCode == 200) {
         final body = json.decode(res.body);

@@ -1,18 +1,37 @@
 import 'package:clean_arch/data/data_source/local_data_source/authentication_local_data_source.dart';
 import 'package:clean_arch/data/data_source/remote_data_source/remote_authentication_data_source.dart';
 import 'package:clean_arch/data/data_source/remote_data_source/remote_cart_data_source.dart';
+import 'package:clean_arch/data/data_source/remote_data_source/remote_category_data_source.dart';
+import 'package:clean_arch/data/data_source/remote_data_source/remote_watch_data_source.dart';
 import 'package:clean_arch/data/data_source/remote_data_source/remote_wishlist_data_source.dart';
 import 'package:clean_arch/data/repository/authentication_repository_impl.dart';
 import 'package:clean_arch/data/repository/cart_repository_impl.dart';
+import 'package:clean_arch/data/repository/category_repository_impl.dart';
+import 'package:clean_arch/data/repository/watch_repository_impl.dart';
 import 'package:clean_arch/data/repository/wishlist_reporitory_impl.dart';
 import 'package:clean_arch/domain/repository/authentication_repository.dart';
 import 'package:clean_arch/domain/repository/cart_repository.dart';
+import 'package:clean_arch/domain/repository/category_repository.dart';
+import 'package:clean_arch/domain/repository/watch_repository.dart';
 import 'package:clean_arch/domain/repository/wishlist_repository.dart';
+import 'package:clean_arch/domain/usecases/authentication_usecases/auto_login_usecase.dart';
 import 'package:clean_arch/domain/usecases/authentication_usecases/create_account_usecase.dart';
+import 'package:clean_arch/domain/usecases/authentication_usecases/forget_password_usecase.dart';
+import 'package:clean_arch/domain/usecases/authentication_usecases/get_user_by_id_usecase.dart';
 import 'package:clean_arch/domain/usecases/authentication_usecases/login_usecase.dart';
+import 'package:clean_arch/domain/usecases/authentication_usecases/logout_usecase.dart';
+import 'package:clean_arch/domain/usecases/authentication_usecases/reset_password_usecase.dart';
+import 'package:clean_arch/domain/usecases/authentication_usecases/update_user_usecase.dart';
+import 'package:clean_arch/domain/usecases/authentication_usecases/verify_otp_usecase.dart';
 import 'package:clean_arch/domain/usecases/cart_usecases/create_cart_usecase.dart';
 import 'package:clean_arch/domain/usecases/cart_usecases/get_cart_by_id_usecase.dart';
 import 'package:clean_arch/domain/usecases/cart_usecases/update_cart_usecase.dart';
+import 'package:clean_arch/domain/usecases/category_usecases/get_all_categories_usecase.dart';
+import 'package:clean_arch/domain/usecases/watch_usecases/get_all_watchs_usecase.dart';
+import 'package:clean_arch/domain/usecases/watch_usecases/get_sorted_watchs_by_cat_usecase.dart';
+import 'package:clean_arch/domain/usecases/watch_usecases/get_sorted_watchs_by_creation_date_usecase.dart';
+import 'package:clean_arch/domain/usecases/watch_usecases/get_sorted_watchs_by_sales_usecase.dart';
+import 'package:clean_arch/domain/usecases/watch_usecases/get_watch_by_id_usecase.dart';
 import 'package:get_it/get_it.dart';
 
 import 'domain/usecases/wishlist_usecases/create_wishlist_usecase.dart';
@@ -27,17 +46,24 @@ Future<void> init() async {
   sl.registerLazySingleton<AuthenticationRepository>(
     () => AuthenticationRepositoryImpl(sl(), sl()),
   );
+
   sl.registerLazySingleton<CartRepository>(
       () => CartRepositoryImpl(cartRemoteDataSource: sl()));
+
   sl.registerLazySingleton<WishlistRepository>(
       () => WishlistReporitoryImpl(wishlistRemoteDataSource: sl()));
+
+  sl.registerLazySingleton<WatchRepository>(
+      () => WatchRepositoryImpl(watchRemoteDataSource: sl()));
+
+  sl.registerLazySingleton<CategoryRepository>(
+      () => CategoryRepositoryImpl(categoryRemoteDataSource: sl()));
   // sl.registerLazySingleton<PromotionRepository>(
   //     () => PromotionRepositoryImpl(sl()));
-  // sl.registerLazySingleton<ProductRepository>(() => ProductRepositoryImp(sl()));
+
   // sl.registerLazySingleton<SubCategoryRepository>(
   //     () => SubCategoryRepositoryImpl(sl()));
-  // sl.registerLazySingleton<CategoryRepository>(
-  //     () => CategoryRepositoryImpl(sl()));
+
   // sl.registerLazySingleton<SupplierRepository>(
   //     () => SupplierRepositoryImpl(sl()));
   // sl.registerLazySingleton<Product3DRepository>(
@@ -53,18 +79,25 @@ Future<void> init() async {
   // /* data sources */
   sl.registerLazySingleton<AuthenticationRemoteDataSource>(
       () => AuthenticationRemoteDataSourceImpl());
+
   sl.registerLazySingleton<AuthenticationLocalDataSource>(
       () => AuthenticationLocalDataSourceImpl());
+
   sl.registerLazySingleton<CartRemoteDataSource>(
       () => CartRemoteDataSourceImpl());
+
   sl.registerLazySingleton<WishlistRemoteDataSource>(
       () => WishlistRemoteDataSourceImpl());
+
+  sl.registerLazySingleton<WatchRemoteDataSource>(
+      () => WatchRemoteDataSourceImpl());
+
+  sl.registerLazySingleton<CategoryRemoteDataSource>(
+      () => CategoryRemoteDataSourceImpl());
+
   // sl.registerLazySingleton<PromotionRemoteDataSource>(
   //     () => PromotionRemoteDataSourceImpl());
-  // sl.registerLazySingleton<ProductRemoteDataSource>(
-  //     () => ProductRemoteDataSourceImpl());
-  // sl.registerLazySingleton<CategoryRemoteDataSource>(
-  //     () => CategoryRemoteDataSourceImpl());
+
   // sl.registerLazySingleton<SubCategoryRemoteDataSource>(
   //     () => SubCategoryRemoteDataSourceImpl());
   // sl.registerLazySingleton<SupplierRemoteDataSource>(
@@ -86,15 +119,15 @@ Future<void> init() async {
   //authentication//
   sl.registerLazySingleton(() => CreateAccountUsecase(sl()));
   sl.registerLazySingleton(() => LoginUsecase(sl()));
-  // sl.registerLazySingleton(() => ForgetPasswordUsecase(sl()));
-  // sl.registerLazySingleton(() => OTPVerificationUsecase(sl()));
-  // sl.registerLazySingleton(() => ResetPasswordUsecase(sl()));
-  // sl.registerLazySingleton(() => UpdateProfilUsecase(sl()));
-  // sl.registerLazySingleton(() => GetUserUsecase(sl()));
-  // sl.registerLazySingleton(() => LogoutUsecase(sl()));
+  sl.registerLazySingleton(() => ForgetPasswordUsecase(sl()));
+  sl.registerLazySingleton(() => OTPVerificationUsecase(sl()));
+  sl.registerLazySingleton(() => ResetPasswordUsecase(sl()));
+  sl.registerLazySingleton(() => UpdateUserUsecase(sl()));
+  sl.registerLazySingleton(() => GetUserByIdUsecase(sl()));
+  sl.registerLazySingleton(() => LogoutUsecase(sl()));
   // sl.registerLazySingleton(() => GoogleLoginUsecase(sl()));
   // sl.registerLazySingleton(() => FacebookLoginUsecase(sl()));
-  // sl.registerLazySingleton(() => AutoLoginUsecase(sl()));
+  sl.registerLazySingleton(() => AutoLoginUsecase(sl()));
   // sl.registerLazySingleton(() => GetRecoveryEmailUsecase(sl()));
 
   //cart//
@@ -113,15 +146,18 @@ Future<void> init() async {
   // sl.registerLazySingleton(() => GetAllPromotionsUsecase(sl()));
 
   // //products//
-  // sl.registerLazySingleton(() => GetAllProductsUsecase(sl()));
+  sl.registerLazySingleton(() => GetAllWatchsUsecase(sl()));
   // sl.registerLazySingleton(() => GetSortedProductsUsecase(sl()));
-  // sl.registerLazySingleton(() => GetProductsByCategoryUsecase(sl()));
+  sl.registerLazySingleton(() => GetWatchByIdUsecase(sl()));
+  sl.registerLazySingleton(() => GetSortedWatchsByCatUsecase(sl()));
+  sl.registerLazySingleton(() => GetSortedWatchsBySalesUsecase(sl()));
+  sl.registerLazySingleton(() => GetSortedWatchsByCreationDateUsecase(sl()));
 
   // //products 3D//
   // sl.registerLazySingleton(() => GetAll3DProductsUseCase(sl()));
 
   // //categories//
-  // sl.registerLazySingleton(() => GetAllCategoriesUsecase(sl()));
+  sl.registerLazySingleton(() => GetAllCategoriesUsecase(sl()));
   // sl.registerLazySingleton(() => GetAllSubCategoriesUsecase(sl()));
 
   // //supplier//

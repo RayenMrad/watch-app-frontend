@@ -3,6 +3,9 @@ import 'package:clean_arch/di.dart';
 import 'package:clean_arch/domain/usecases/authentication_usecases/auto_login_usecase.dart';
 import 'package:clean_arch/domain/usecases/authentication_usecases/get_user_by_id_usecase.dart';
 import 'package:clean_arch/presentation/controller/authentication_controller.dart';
+import 'package:clean_arch/presentation/controller/category_controller.dart';
+import 'package:clean_arch/presentation/controller/watch_controller.dart';
+import 'package:clean_arch/presentation/controller/wishlist_controller.dart';
 import 'package:clean_arch/presentation/screens/auth-screens/login-page.dart';
 import 'package:clean_arch/presentation/screens/auth-screens/signUp-page.dart';
 import 'package:clean_arch/presentation/screens/home-screen.dart';
@@ -57,16 +60,17 @@ class _SplashScreenState extends State<SplashScreen>
   static Future<void> init(BuildContext context, int duration) async {
     //Get.put(SettingsController());
     Get.put(AuthenticationController());
+    Get.put(WatchController());
+    Get.put(CategoryController());
+    Get.put(WishlistController());
     // Get.put(CartController());
-    // Get.put(WishListController());
     // Get.put(MainScreenController());
     // Get.put(SupplierController());
-    // Get.put(ProductController());
-    // Get.put(CategoryController());
+
     // Get.put(PromotionController());
     // final SettingsController settingsController = Get.find();
     final AuthenticationController authController = Get.find();
-    // final WishListController wishListController = Get.find();
+    final WishlistController wishListController = Get.find();
     // final CartController cartController = Get.find();
 
     // final lang = await settingsController.loadLocale();
@@ -84,8 +88,9 @@ class _SplashScreenState extends State<SplashScreen>
           res = false;
         }, (r) async {
           authController.currentUser = r;
-          // await wishListController
-          //     .getUserWishlist(authController.currentUser.id!);
+          await wishListController.getWishList(authController.currentUser.id!);
+          print(wishListController.currentWishlist.watchs);
+
           // await cartController.getUserCart(authController.currentUser.id!);
           // Get.put(NotificationsController());
         });

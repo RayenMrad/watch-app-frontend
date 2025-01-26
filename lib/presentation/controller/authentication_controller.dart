@@ -14,8 +14,11 @@ import 'package:clean_arch/domain/usecases/authentication_usecases/login_usecase
 import 'package:clean_arch/domain/usecases/authentication_usecases/logout_usecase.dart';
 import 'package:clean_arch/domain/usecases/authentication_usecases/reset_password_usecase.dart';
 import 'package:clean_arch/domain/usecases/authentication_usecases/update_image_usecase.dart';
+import 'package:clean_arch/domain/usecases/authentication_usecases/update_password_usercase.dart';
 import 'package:clean_arch/domain/usecases/authentication_usecases/update_user_usecase.dart';
 import 'package:clean_arch/domain/usecases/authentication_usecases/verify_otp_usecase.dart';
+import 'package:clean_arch/domain/usecases/wishlist_usecases/create_wishlist_usecase.dart';
+import 'package:clean_arch/presentation/controller/wishlist_controller.dart';
 import 'package:clean_arch/presentation/screens/auth-screens/login-page.dart';
 import 'package:clean_arch/presentation/screens/auth-screens/otp-screen.dart';
 import 'package:clean_arch/presentation/screens/auth-screens/reset-password-screen.dart';
@@ -110,7 +113,7 @@ class AuthenticationController extends GetxController {
     res.fold((l) => message = l.message!, (r) async {
       message = AppLocalizations.of(context)!.account_created;
 
-      // await CreateWishListUsecase(sl())(userId: r);
+      await CreateWishListUsecase(sl())(userId: r);
       // await CreateCartUsecase(sl())(userId: r);
 
       email.clear();
@@ -157,15 +160,16 @@ class AuthenticationController extends GetxController {
       token = r;
       email.clear();
       password.clear();
+      final userRes = await getCurrentUser(r.userId);
+      final WishlistController wishListController = Get.find();
+      await wishListController.getWishList(currentUser.id!);
+      print(wishListController.currentWishlist.watchs);
       return Navigator.of(context)
           .pushReplacement(MaterialPageRoute(builder: (_) => const HomePage()));
       // await getOneUser(r.userId).then((value) async {
-      //   final WishListController wishListController = Get.find();
       //   final CartController cartController = Get.find();
       //   // final CategoryController categorControlller = Get.find();
       //   final AuthenticationController authController = Get.find();
-      //   await wishListController
-      //       .getUserWishlist(authController.currentUser.id!);
       //   await cartController.getUserCart(authController.currentUser.id!);
       //
       // });
@@ -324,20 +328,20 @@ class AuthenticationController extends GetxController {
             fontSize: 16.0));
   }
 
-  /*
-  
   Future<void> updatePassword(
       TextEditingController currentPassword,
       TextEditingController password,
       TextEditingController cPassword,
-      TextEditingController recovery,
       BuildContext context) async {
     String message = 'error';
-    final res = await UpdatePasswordUsecase(sl())(
-        userId: currentUser.id!,
-        newPassword: password.text,
-        oldPassword: currentPassword.text,
-        recoverEmail: recovery.text);
+    print("Current Password: ${currentPassword.text}");
+    print("New Password: ${password.text}");
+    print("Confirm Password: ${cPassword.text}");
+    final res = await UpdatePasswordUsercase(sl())(
+      userId: currentUser.id!,
+      newPassword: password.text,
+      oldPassword: currentPassword.text,
+    );
     res.fold((l) => message = l.message!, (r) async {
       message = AppLocalizations.of(context)!.profile_updated;
       password.clear();
@@ -350,10 +354,14 @@ class AuthenticationController extends GetxController {
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         timeInSecForIosWeb: 1,
-        backgroundColor: AppColors.toastColor,
-        textColor: AppColors.white,
+        backgroundColor: Color(0xFFAF6767),
+        textColor: Colors.white,
         fontSize: 16.0);
   }
+
+  /*
+  
+  
 
   
   Future<void> facebookLogin(BuildContext context) async {

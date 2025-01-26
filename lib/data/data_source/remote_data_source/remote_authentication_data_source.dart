@@ -226,8 +226,8 @@ class AuthenticationRemoteDataSourceImpl
   Future<void> updatePassword(
       String userId, String oldPassword, String newPassword) async {
     try {
-      // AppLocalizations t =
-      //     await AppLocalizations.delegate.load(Locale(await locale));
+      AppLocalizations t =
+          await AppLocalizations.delegate.load(Locale(await locale));
 
       Map<String, dynamic> requestData = {
         'id': userId,
@@ -238,7 +238,7 @@ class AuthenticationRemoteDataSourceImpl
       String authToken = await token.then((value) => value!.token);
 
       final url = Uri.parse(ApiConst.updateUserPassword);
-      final res = await http.post(
+      final res = await http.put(
         url,
         headers: {
           'Content-Type': 'application/json',
@@ -247,7 +247,7 @@ class AuthenticationRemoteDataSourceImpl
         body: jsonEncode(requestData),
       );
       if (res.statusCode == 202) {
-        throw DataNotFoundException("t.wrong_password");
+        throw DataNotFoundException(t.wrong_password);
       } else if (res.statusCode == 500) {
         throw ServerException(message: "server error");
       } else if (res.statusCode != 200) {

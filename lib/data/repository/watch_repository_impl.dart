@@ -46,4 +46,77 @@ class WatchRepositoryImpl implements WatchRepository {
       return left(ServerFailure());
     }
   }
+
+  @override
+  Future<Either<Failure, List<Watch>>> getSortedWatchsByCat() async {
+    try {
+      final productModels = await watchRemoteDataSource.getSortedWatchsByCat();
+      final watchs = productModels
+          .map((e) => Watch(
+              id: e.id,
+              name: e.name,
+              image: e.image,
+              price: e.price,
+              brand: e.brand,
+              category: e.category,
+              reference: e.reference,
+              description: e.description,
+              size: e.size))
+          .toList();
+      return right(watchs);
+    } on ServerException {
+      return left(ServerFailure());
+    } on NotAuthorizedException {
+      return left(NotAuthorizedFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Watch>>> getSortedWatchsBySales() async {
+    try {
+      final watchModels = await watchRemoteDataSource.getSortedWatchsBySales();
+      final watchs = watchModels
+          .map((e) => Watch(
+              id: e.id,
+              name: e.name,
+              image: e.image,
+              price: e.price,
+              brand: e.brand,
+              category: e.category,
+              reference: e.reference,
+              description: e.description,
+              size: e.size))
+          .toList();
+      return right(watchs);
+    } on ServerException {
+      return left(ServerFailure());
+    } on NotAuthorizedException {
+      return left(NotAuthorizedFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Watch>>> getSortedWatchsByCreationDate() async {
+    try {
+      final watchModels =
+          await watchRemoteDataSource.getSortedWatchsByCreationDate();
+      final watchs = watchModels
+          .map((e) => Watch(
+              id: e.id,
+              name: e.name,
+              image: e.image,
+              price: e.price,
+              brand: e.brand,
+              category: e.category,
+              reference: e.reference,
+              description: e.description,
+              size: e.size))
+          .toList();
+      return right(watchs);
+    } on ServerException {
+      return left(ServerFailure());
+    } on NotAuthorizedException {
+      return left(NotAuthorizedFailure());
+    }
+  }
 }

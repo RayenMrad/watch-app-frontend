@@ -1,6 +1,6 @@
 import 'package:clean_arch/presentation/controller/authentication_controller.dart';
 import 'package:clean_arch/presentation/screens/home-screen.dart';
-import 'package:clean_arch/presentation/widgets/Payment-header.dart';
+import 'package:clean_arch/presentation/widgets/headers/Payment-header.dart';
 import 'package:clean_arch/presentation/widgets/image-container.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -87,7 +87,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           const SizedBox(height: 10),
                           const ImageContainer(
                             imageUrl:
-                                "https://cdn3.pixelcut.app/7/20/uncrop_hero_bdf08a8ca6.jpg", // Pass null initially for default icon
+                                "https://cdn3.pixelcut.app/7/20/uncrop_hero_bdf08a8ca6.jpg",
+                            edit: true, // Pass null initially for default icon
                             // onImageSelect:
                             //     _pickImage, // Implement image selection logic
                           ),

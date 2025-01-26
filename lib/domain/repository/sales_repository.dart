@@ -9,6 +9,8 @@ abstract class SalesRepository {
   Future<Either<Failure, List<Sales>>> getAllSales({required String userId});
 
   Future<Either<Failure, Sales>> getSalesById({required String salesId});
+
   Future<Either<Failure, Unit>> updateSales(Sales sale);
+
   Future<Either<Failure, Unit>> deleteSales({required String salesId});
 }

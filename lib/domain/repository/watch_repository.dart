@@ -7,4 +7,7 @@ abstract class WatchRepository {
   Future<Either<Failure, Watch>> getWatchById({required String watchId});
   Future<Either<Failure, List<Watch>>> getWatchsByCategory(
       {required String category});
+  Future<Either<Failure, List<Watch>>> getSortedWatchsByCat();
+  Future<Either<Failure, List<Watch>>> getSortedWatchsBySales();
+  Future<Either<Failure, List<Watch>>> getSortedWatchsByCreationDate();
 }

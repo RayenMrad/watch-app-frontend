@@ -6,7 +6,7 @@ class ApiConst {
   static const login = '$baseUrl/login';
   static const getOneUser = '$baseUrl/user';
   static const updateUser = '$baseUrl/updateUser';
-  static const updateUserPassword = '$baseUrl/updatePassword';
+  static const updateUserPassword = '$baseUrl/update-password';
   static const updateUserImage = '$baseUrl/updateImage';
   static const refreshToken = "$baseUrl/refreshtoken";
   static const forgetPassword = "$baseUrl/forgetPassword";
@@ -18,6 +18,9 @@ class ApiConst {
   static const getAllWatchs = '$baseUrl/watchs';
   static const getOnewatch = '$baseUrl/watch';
   static const getWatchsByCat = '$baseUrl/watchCat';
+  static const getSortedWatchsByCat = '$baseUrl/watchs/sorted/category';
+  static const getSortedWatchsBySales = '$baseUrl/watchs/sorted/sales';
+  static const getSortedWatchsByCreationDate = '$baseUrl/watchs/sorted/date';
 
   //category apis
   static const categories = '$baseUrl/categories';
@@ -46,6 +49,6 @@ class ApiConst {
   //wishlist apis
   static const createWishList = '$baseUrl/wishList/create';
   static const getOneWishList = '$baseUrl/wishList';
-  static const updateWishList = '$baseUrl/wishList/update';
+  static const updateWishList = '$baseUrl/updateWishlist';
   static const deleteWishList = '$baseUrl/wishList/delete';
 }

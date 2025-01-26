@@ -1,4 +1,4 @@
-import 'package:clean_arch/presentation/widgets/Payment-header.dart';
+import 'package:clean_arch/presentation/widgets/headers/Payment-header.dart';
 import 'package:flutter/material.dart';
 
 class PaymentMethodScreen extends StatefulWidget {
