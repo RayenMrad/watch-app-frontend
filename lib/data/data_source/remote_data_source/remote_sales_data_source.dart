@@ -13,6 +13,8 @@ import 'package:http/http.dart' as http;
 abstract class SalesRemoteDataSource {
   Future<void> createSales(String userId, String variantId);
 
+  Future<SalesModel> addSale(SalesModel newSale);
+
   Future<List<SalesModel>> getAllSales(String userId);
 
   Future<SalesModel> getSalesById(String salesId);
@@ -53,6 +55,28 @@ class SalesRemoteDataSourceImpl implements SalesRemoteDataSource {
       }
     } catch (e) {
       rethrow;
+    }
+  }
+
+  @override
+  Future<SalesModel> addSale(SalesModel newSale) async {
+    try {
+      final res = await http.post(
+        Uri.parse(ApiConst.addSales),
+        body: jsonEncode(newSale.tojson()),
+        headers: {
+          "authorization":
+              "Bearer ${await token.then((value) => value!.token)}",
+        },
+      );
+      if (res.statusCode == 200 || res.statusCode == 201) {
+        final resData = jsonDecode(res.body);
+        return SalesModel.fromJson(resData['sale']);
+      } else {
+        throw ServerException();
+      }
+    } catch (e) {
+      throw ServerException();
     }
   }
 

@@ -14,7 +14,6 @@ class CartModel extends Cart {
       sales: (json['sales'] as List).map((e) => e.toString()).toList());
 
   Map<String, dynamic> toJson() => {
-        '_id': id,
         'userId': userId,
         'sales': sales.map((sale) => (sale as SalesModel).tojson()).toList(),
       };

@@ -53,7 +53,7 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
         final body = json.decode(res.body);
         return CartModel.fromJson(body);
       } else if (res.statusCode == 404) {
-        throw ProductNotFoundException();
+        throw CartNotFoundException();
       } else {
         throw ServerException();
       }

@@ -17,7 +17,6 @@ class SalesModel extends Sales {
       );
 
   Map<String, dynamic> tojson() => {
-        '_id': id,
         'quantity': quantity,
         'totalprice': totalprice,
         'userId': userId,

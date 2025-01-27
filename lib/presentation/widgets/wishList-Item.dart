@@ -1,10 +1,11 @@
+import 'package:clean_arch/domain/enteties/variant.dart';
 import 'package:clean_arch/domain/enteties/watch.dart';
 import 'package:flutter/material.dart';
 
-class WatchItem extends StatelessWidget {
-  final watch;
+class WishlistItem extends StatelessWidget {
+  final Variant watch;
 
-  const WatchItem({Key? key, required this.watch}) : super(key: key);
+  const WishlistItem({Key? key, required this.watch}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +25,7 @@ class WatchItem extends StatelessWidget {
                   borderRadius:
                       const BorderRadius.vertical(top: Radius.circular(10)),
                   child: Image.network(
-                    watch.image,
+                    watch.imageColor,
                     fit: BoxFit.fitHeight,
                     width: double.infinity,
                   ),
@@ -33,7 +34,7 @@ class WatchItem extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 1),
                 child: Text(
-                  watch.name,
+                  watch.id,
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 14,
@@ -44,7 +45,7 @@ class WatchItem extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: Text(
-                  watch.brand,
+                  watch.watchId,
                   style: const TextStyle(
                     color: Color.fromARGB(255, 145, 145, 145),
                     fontWeight: FontWeight.bold,
@@ -55,7 +56,7 @@ class WatchItem extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: Text(
-                  '${watch.price}\ Dt',
+                  '${watch.quantity}\ Dt',
                   style: const TextStyle(
                     color: Color(0xFFAF6767),
                     fontWeight: FontWeight.bold,

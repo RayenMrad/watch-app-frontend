@@ -4,4 +4,5 @@ import 'package:dartz/dartz.dart';
 
 abstract class VariantRepository {
   Future<Either<Failure, List<Variant>>> getAllVariant();
+  Future<Either<Failure, Variant>> getOneVariant(String variantId);
 }

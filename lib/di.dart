@@ -2,16 +2,22 @@ import 'package:clean_arch/data/data_source/local_data_source/authentication_loc
 import 'package:clean_arch/data/data_source/remote_data_source/remote_authentication_data_source.dart';
 import 'package:clean_arch/data/data_source/remote_data_source/remote_cart_data_source.dart';
 import 'package:clean_arch/data/data_source/remote_data_source/remote_category_data_source.dart';
+import 'package:clean_arch/data/data_source/remote_data_source/remote_sales_data_source.dart';
+import 'package:clean_arch/data/data_source/remote_data_source/remote_variant_data_source.dart';
 import 'package:clean_arch/data/data_source/remote_data_source/remote_watch_data_source.dart';
 import 'package:clean_arch/data/data_source/remote_data_source/remote_wishlist_data_source.dart';
 import 'package:clean_arch/data/repository/authentication_repository_impl.dart';
 import 'package:clean_arch/data/repository/cart_repository_impl.dart';
 import 'package:clean_arch/data/repository/category_repository_impl.dart';
+import 'package:clean_arch/data/repository/sales_repository_impl.dart';
+import 'package:clean_arch/data/repository/variant_repository_impl.dart';
 import 'package:clean_arch/data/repository/watch_repository_impl.dart';
 import 'package:clean_arch/data/repository/wishlist_reporitory_impl.dart';
 import 'package:clean_arch/domain/repository/authentication_repository.dart';
 import 'package:clean_arch/domain/repository/cart_repository.dart';
 import 'package:clean_arch/domain/repository/category_repository.dart';
+import 'package:clean_arch/domain/repository/sales_repository.dart';
+import 'package:clean_arch/domain/repository/variant_repository.dart';
 import 'package:clean_arch/domain/repository/watch_repository.dart';
 import 'package:clean_arch/domain/repository/wishlist_repository.dart';
 import 'package:clean_arch/domain/usecases/authentication_usecases/auto_login_usecase.dart';
@@ -27,6 +33,12 @@ import 'package:clean_arch/domain/usecases/cart_usecases/create_cart_usecase.dar
 import 'package:clean_arch/domain/usecases/cart_usecases/get_cart_by_id_usecase.dart';
 import 'package:clean_arch/domain/usecases/cart_usecases/update_cart_usecase.dart';
 import 'package:clean_arch/domain/usecases/category_usecases/get_all_categories_usecase.dart';
+import 'package:clean_arch/domain/usecases/sales_usecases/add_sales_usecase.dart';
+import 'package:clean_arch/domain/usecases/sales_usecases/get_all_sales_usecase.dart';
+import 'package:clean_arch/domain/usecases/sales_usecases/get_sales_by_id_usecase.dart';
+import 'package:clean_arch/domain/usecases/sales_usecases/update_sales_usecase.dart';
+import 'package:clean_arch/domain/usecases/variant_usecases/get_one_variant_usecase.dart';
+import 'package:clean_arch/domain/usecases/variant_usecases/get_all_variant_usecase.dart';
 import 'package:clean_arch/domain/usecases/watch_usecases/get_all_watchs_usecase.dart';
 import 'package:clean_arch/domain/usecases/watch_usecases/get_sorted_watchs_by_cat_usecase.dart';
 import 'package:clean_arch/domain/usecases/watch_usecases/get_sorted_watchs_by_creation_date_usecase.dart';
@@ -58,6 +70,12 @@ Future<void> init() async {
 
   sl.registerLazySingleton<CategoryRepository>(
       () => CategoryRepositoryImpl(categoryRemoteDataSource: sl()));
+
+  sl.registerLazySingleton<VariantRepository>(
+      () => VariantRepositoryImpl(variantRemoteDataSource: sl()));
+
+  sl.registerLazySingleton<SalesRepository>(
+      () => SalesRepositoryImpl(salesRemoteDataSource: sl()));
   // sl.registerLazySingleton<PromotionRepository>(
   //     () => PromotionRepositoryImpl(sl()));
 
@@ -66,8 +84,7 @@ Future<void> init() async {
 
   // sl.registerLazySingleton<SupplierRepository>(
   //     () => SupplierRepositoryImpl(sl()));
-  // sl.registerLazySingleton<Product3DRepository>(
-  //     () => Product3DRepositoryImpl(sl()));
+
   // sl.registerLazySingleton<RatingRepository>(() => RatingRepositoryImpl(sl()));
   // sl.registerLazySingleton<ReviewRepository>(() => ReviewRepositoryImpl(sl()));
   // sl.registerLazySingleton<SalesRepository>(() => SalesRepositoryImpl(sl()));
@@ -95,6 +112,12 @@ Future<void> init() async {
   sl.registerLazySingleton<CategoryRemoteDataSource>(
       () => CategoryRemoteDataSourceImpl());
 
+  sl.registerLazySingleton<VariantRemoteDataSource>(
+      () => VariantRemoteDataSourceImpl());
+
+  sl.registerLazySingleton<SalesRemoteDataSource>(
+      () => SalesRemoteDataSourceImpl());
+
   // sl.registerLazySingleton<PromotionRemoteDataSource>(
   //     () => PromotionRemoteDataSourceImpl());
 
@@ -102,8 +125,7 @@ Future<void> init() async {
   //     () => SubCategoryRemoteDataSourceImpl());
   // sl.registerLazySingleton<SupplierRemoteDataSource>(
   //     () => SupplierRemoteDataSourceImpl());
-  // sl.registerLazySingleton<Product3DRemoteDataSource>(
-  //     () => Product3DRemoteDataSourceImpl());
+
   // sl.registerLazySingleton<RatingRemoteDataSource>(
   //     () => RatingRemoteDataSourceImpl());
   // sl.registerLazySingleton<ReviewRemoteDataSource>(
@@ -154,7 +176,8 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetSortedWatchsByCreationDateUsecase(sl()));
 
   // //products 3D//
-  // sl.registerLazySingleton(() => GetAll3DProductsUseCase(sl()));
+  sl.registerLazySingleton(() => GetAllVariantUsecase(sl()));
+  sl.registerLazySingleton(() => GetOneVariant(sl()));
 
   // //categories//
   sl.registerLazySingleton(() => GetAllCategoriesUsecase(sl()));
@@ -179,10 +202,10 @@ Future<void> init() async {
   // sl.registerLazySingleton(() => AddReviewImageUsecase(sl()));
 
   // //sales usecases//
-  // sl.registerLazySingleton(() => AddSaleUsecase(sl()));
-  // sl.registerLazySingleton(() => GetAllSalesUsecase(sl()));
-  // sl.registerLazySingleton(() => GetSingleSalesUsecase(sl()));
-  // sl.registerLazySingleton(() => UpdateSaleUsecase(sl()));
+  sl.registerLazySingleton(() => AddSaleUsecase(sl()));
+  sl.registerLazySingleton(() => GetAllSalesUsecase(sl()));
+  sl.registerLazySingleton(() => GetSalesByIdUsecase(sl()));
+  sl.registerLazySingleton(() => UpdateSalesUsecase(sl()));
   // sl.registerLazySingleton(() => DeleteSaleUsecase(sl()));
 
   // //reclamations usecases//

@@ -44,6 +44,11 @@ class WishlistNotFoundException implements Exception {
   WishlistNotFoundException([this.message = "Wishlist Not Found"]);
 }
 
+class CartNotFoundException implements Exception {
+  final String? message;
+  CartNotFoundException([this.message = "Cart Not Found"]);
+}
+
 class RefreshTokenException implements Exception {}
 
 class BadOTPException implements Exception {

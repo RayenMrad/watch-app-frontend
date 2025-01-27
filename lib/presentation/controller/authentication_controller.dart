@@ -17,7 +17,9 @@ import 'package:clean_arch/domain/usecases/authentication_usecases/update_image_
 import 'package:clean_arch/domain/usecases/authentication_usecases/update_password_usercase.dart';
 import 'package:clean_arch/domain/usecases/authentication_usecases/update_user_usecase.dart';
 import 'package:clean_arch/domain/usecases/authentication_usecases/verify_otp_usecase.dart';
+import 'package:clean_arch/domain/usecases/cart_usecases/create_cart_usecase.dart';
 import 'package:clean_arch/domain/usecases/wishlist_usecases/create_wishlist_usecase.dart';
+import 'package:clean_arch/presentation/controller/cart_controller.dart';
 import 'package:clean_arch/presentation/controller/wishlist_controller.dart';
 import 'package:clean_arch/presentation/screens/auth-screens/login-page.dart';
 import 'package:clean_arch/presentation/screens/auth-screens/otp-screen.dart';
@@ -114,7 +116,7 @@ class AuthenticationController extends GetxController {
       message = AppLocalizations.of(context)!.account_created;
 
       await CreateWishListUsecase(sl())(userId: r);
-      // await CreateCartUsecase(sl())(userId: r);
+      await CreateCartUsecase(sl())(userId: r);
 
       email.clear();
       password.clear();
@@ -162,15 +164,17 @@ class AuthenticationController extends GetxController {
       password.clear();
       final userRes = await getCurrentUser(r.userId);
       final WishlistController wishListController = Get.find();
+      final CartController cartController = Get.find();
+
       await wishListController.getWishList(currentUser.id!);
+      await cartController.getUserCart(currentUser.id!);
+
       print(wishListController.currentWishlist.watchs);
       return Navigator.of(context)
           .pushReplacement(MaterialPageRoute(builder: (_) => const HomePage()));
       // await getOneUser(r.userId).then((value) async {
-      //   final CartController cartController = Get.find();
       //   // final CategoryController categorControlller = Get.find();
       //   final AuthenticationController authController = Get.find();
-      //   await cartController.getUserCart(authController.currentUser.id!);
       //
       // });
     });

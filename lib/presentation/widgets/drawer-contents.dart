@@ -1,6 +1,7 @@
 import 'package:clean_arch/presentation/controller/authentication_controller.dart';
 import 'package:clean_arch/presentation/screens/auth-screens/login-page.dart';
 import 'package:clean_arch/presentation/screens/auth-screens/update-password-screen.dart';
+import 'package:clean_arch/presentation/screens/cart-screen.dart';
 import 'package:clean_arch/presentation/screens/profile-screens/edit-profile-screen.dart';
 import 'package:clean_arch/presentation/screens/favorites-screen.dart';
 import 'package:clean_arch/presentation/screens/home-screen.dart';
@@ -141,6 +142,28 @@ class DrawerContents extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                           builder: (context) => FavoritesScreen()),
+                    );
+                  }),
+              SizedBox(
+                height: 20,
+              ),
+              ListTile(
+                  leading: Icon(
+                    Icons.shopping_bag_outlined,
+                    size: 30,
+                    color: Colors.black54,
+                  ),
+                  title: Text(
+                    "Cart",
+                    style: TextStyle(
+                        fontFamily: 'Roboto',
+                        fontWeight: FontWeight.w600,
+                        fontSize: 20),
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => CartPage()),
                     );
                   }),
               SizedBox(

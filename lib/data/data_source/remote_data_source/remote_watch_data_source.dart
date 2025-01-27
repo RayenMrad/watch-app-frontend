@@ -28,6 +28,7 @@ class WatchRemoteDataSourceImpl implements WatchRemoteDataSource {
       final res = await http.get(uri);
       if (res.statusCode == 200) {
         final body = json.decode(res.body);
+        print(body.toString());
         return WatchModel.fromJson(body);
       } else if (res.statusCode == 404) {
         throw WatchNotFoundException();
@@ -35,6 +36,7 @@ class WatchRemoteDataSourceImpl implements WatchRemoteDataSource {
         throw ServerException();
       }
     } catch (e) {
+      print(e.toString());
       rethrow;
     }
   }

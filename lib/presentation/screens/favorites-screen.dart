@@ -6,6 +6,7 @@ import 'package:clean_arch/presentation/screens/watch-screen.dart';
 import 'package:clean_arch/presentation/widgets/drawer-contents.dart';
 import 'package:clean_arch/presentation/widgets/headers/header.dart';
 import 'package:clean_arch/presentation/widgets/product/product_item.dart';
+import 'package:clean_arch/presentation/widgets/wishList-Item.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -91,6 +92,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                             const SizedBox(height: 20), // Space before grid
 
                             // Constrain GridView to avoid layout conflict
+
                             Expanded(
                               child: GetBuilder<WishlistController>(
                                 init: WishlistController(),
@@ -100,8 +102,8 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                                         wishlistController.currentWishlist.id),
                                     builder: (context, snapshot) {
                                       if (snapshot.hasData) {
-                                        final wishlist =
-                                            snapshot.data as WishlistModel;
+                                        // final wishlist =
+                                        //     snapshot.data as WishlistModel;
                                         return GridView.builder(
                                           gridDelegate:
                                               const SliverGridDelegateWithFixedCrossAxisCount(
@@ -110,22 +112,31 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                                             mainAxisSpacing: 16,
                                             childAspectRatio: 3 / 3,
                                           ),
-                                          itemCount: wishlist.watchs.length,
-                                          // itemCount: wishlistController
-                                          // .currentWishlist.watchs.length,
+                                          // itemCount: wishlist.watchs.length,
+                                          itemCount: wishlistController
+                                              .currentWishlist.watchs.length,
+
                                           itemBuilder: (context, int index) {
-                                            final watchId =
-                                                wishlist.watchs[index];
-                                            final watch = watchController
-                                                .getWatchById(watchId);
+                                            // final watchId =
+                                            //     wishlist.watchs[index];
+                                            // final watch = watchController
+                                            //     .getWatchById(watchId);
                                             return InkWell(
                                               onTap: () {
+                                                print(watchController
+                                                    .allWatchs.length);
                                                 Navigator.of(context).push(
                                                   MaterialPageRoute(
                                                     builder: (_) => WatchPage(
-                                                      watch: watch,
-                                                      // watch: (snapshot.data
-                                                      // as List)[index],
+                                                      // watch: watch,
+                                                      watch: watchController
+                                                          .allWatchs
+                                                          .firstWhere((e) =>
+                                                              e.id ==
+                                                              wishlistController
+                                                                  .wishlistModel[
+                                                                      index]
+                                                                  .watchId),
                                                     ),
                                                   ),
                                                 );
@@ -137,11 +148,10 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                                                   minHeight:
                                                       100, // Ensure minimum size constraints
                                                 ),
-                                                child: WatchItem(
-                                                  watch: watch,
-                                                  // watch: (snapshot.data
-                                                  // as List)[index],
-                                                ),
+                                                child: WishlistItem(
+                                                    // watch: watch,
+                                                    watch: wishlistController
+                                                        .wishlistModel[index]),
                                               ),
                                             );
                                           },

@@ -38,7 +38,6 @@ class Fetchwatchs extends StatelessWidget {
                 itemBuilder: (context, int index) {
                   return InkWell(
                     onTap: () {
-                      print(watchController.watchsList[index].id);
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (_) => WatchPage(

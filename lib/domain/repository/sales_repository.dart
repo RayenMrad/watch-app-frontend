@@ -3,8 +3,10 @@ import 'package:clean_arch/domain/enteties/sales.dart';
 import 'package:dartz/dartz.dart';
 
 abstract class SalesRepository {
-  Future<Either<Failure, Unit>> createSales(
-      {required String userId, required String variantId});
+  // Future<Either<Failure, Unit>> createSales(
+  //     {required String userId, required String variantId});
+
+  Future<Either<Failure, Sales>> addSales(Sales newSale);
 
   Future<Either<Failure, List<Sales>>> getAllSales({required String userId});
 

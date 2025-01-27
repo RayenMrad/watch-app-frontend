@@ -39,6 +39,7 @@ class ApiConst {
 
   //variant apis
   static const getAllVariant = '$baseUrl/variants';
+  static const getOneVariant = '$baseUrl/variant';
 
   //cart apis
   static const addCart = '$baseUrl/addCart';
