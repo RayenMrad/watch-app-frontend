@@ -4,15 +4,11 @@ import 'package:clean_arch/core/error/exceptions/exceptions.dart';
 import 'package:clean_arch/core/utils/api_const.dart';
 import 'package:clean_arch/data/data_source/local_data_source/authentication_local_data_source.dart';
 import 'package:clean_arch/data/data_source/local_data_source/settings_local_data_source.dart';
-import 'package:clean_arch/data/data_source/remote_data_source/remote_authentication_data_source.dart';
 import 'package:clean_arch/data/models/sales_model.dart';
 import 'package:clean_arch/data/models/token_model.dart';
-import 'package:clean_arch/domain/enteties/sales.dart';
 import 'package:http/http.dart' as http;
 
 abstract class SalesRemoteDataSource {
-  Future<void> createSales(String userId, String variantId);
-
   Future<SalesModel> addSale(SalesModel newSale);
 
   Future<List<SalesModel>> getAllSales(String userId);
@@ -34,44 +30,20 @@ class SalesRemoteDataSourceImpl implements SalesRemoteDataSource {
   }
 
   @override
-  Future<void> createSales(String userId, String variantId) async {
-    try {
-      String authToken = await token.then((value) => value!.token);
-      final url = Uri.parse(ApiConst.addSales);
-      final data = {
-        'userId': userId,
-        'variantId': variantId,
-      };
-
-      final res = await http.post(url,
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer $authToken',
-          },
-          body: jsonEncode(data));
-
-      if (res.statusCode != 200) {
-        throw ServerException();
-      }
-    } catch (e) {
-      rethrow;
-    }
-  }
-
-  @override
   Future<SalesModel> addSale(SalesModel newSale) async {
     try {
+      final authToken = await token.then((value) => value!.token);
       final res = await http.post(
         Uri.parse(ApiConst.addSales),
-        body: jsonEncode(newSale.tojson()),
         headers: {
-          "authorization":
-              "Bearer ${await token.then((value) => value!.token)}",
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $authToken',
         },
+        body: jsonEncode(newSale.tojson()),
       );
       if (res.statusCode == 200 || res.statusCode == 201) {
-        final resData = jsonDecode(res.body);
-        return SalesModel.fromJson(resData['sale']);
+        final data = jsonDecode(res.body);
+        return SalesModel.fromJson(data['sale']);
       } else {
         throw ServerException();
       }
@@ -83,8 +55,7 @@ class SalesRemoteDataSourceImpl implements SalesRemoteDataSource {
   @override
   Future<void> deleteSales(String salesId) async {
     try {
-      String authToken = await token.then((value) => value!.token);
-
+      final authToken = await token.then((value) => value!.token);
       final url = Uri.parse('${ApiConst.deleteSales}/$salesId');
       final res = await http.delete(
         url,
@@ -103,8 +74,13 @@ class SalesRemoteDataSourceImpl implements SalesRemoteDataSource {
   @override
   Future<List<SalesModel>> getAllSales(String userId) async {
     try {
-      final uri = Uri.parse(ApiConst.getAllSales);
-      final res = await http.get(uri);
+      final authToken = await token.then((value) => value!.token);
+      final res = await http.get(
+        Uri.parse('${ApiConst.getAllSales}/$userId'),
+        headers: {
+          'Authorization': 'Bearer $authToken',
+        },
+      );
       if (res.statusCode == 200) {
         List<dynamic> body = json.decode(res.body);
         return body.map((e) => SalesModel.fromJson(e)).toList();
@@ -121,10 +97,16 @@ class SalesRemoteDataSourceImpl implements SalesRemoteDataSource {
   @override
   Future<SalesModel> getSalesById(String salesId) async {
     try {
+      final authToken = await token.then((value) => value!.token);
       final uri = Uri.parse('${ApiConst.getOneSale}/$salesId');
-      final res = await http.get(uri);
+      final res = await http.get(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $authToken',
+        },
+      );
       if (res.statusCode == 200) {
-        final body = json.decode(res.body);
+        final body = jsonDecode(res.body);
         return SalesModel.fromJson(body);
       } else if (res.statusCode == 404) {
         throw SalesNotFoundException();
@@ -139,7 +121,7 @@ class SalesRemoteDataSourceImpl implements SalesRemoteDataSource {
   @override
   Future<void> updateSales(SalesModel updateSale) async {
     try {
-      String authToken = await token.then((value) => value!.token);
+      final authToken = await token.then((value) => value!.token);
       final url = Uri.parse("${ApiConst.updateSales}/${updateSale.id}");
       final body = jsonEncode(updateSale.tojson());
       final res = await http.put(
@@ -154,6 +136,7 @@ class SalesRemoteDataSourceImpl implements SalesRemoteDataSource {
         throw ServerException();
       }
     } catch (e) {
+      print("object sale: ${e.toString()}");
       rethrow;
     }
   }

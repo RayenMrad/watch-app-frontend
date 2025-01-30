@@ -51,9 +51,7 @@ class WatchesGridWidget extends StatelessWidget {
                       print(watchController.watchsList[index].id);
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (_) => WatchPage(
-                            watch: watchController.watchsList[index],
-                          ),
+                          builder: (_) => WatchPage(),
                         ),
                       );
                     },

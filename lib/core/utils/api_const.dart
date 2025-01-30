@@ -34,8 +34,8 @@ class ApiConst {
   static const addSales = '$baseUrl/addSales'; //create sale
   static const getAllSales = '$baseUrl/sales';
   static const getOneSale = '$baseUrl/sale';
-  static const updateSales = '$baseUrl/updateSales';
-  static const deleteSales = '$baseUrl/updateSales';
+  static const updateSales = '$baseUrl/sales';
+  static const deleteSales = '$baseUrl/sales';
 
   //variant apis
   static const getAllVariant = '$baseUrl/variants';

@@ -71,8 +71,8 @@ Future<void> init() async {
   sl.registerLazySingleton<CategoryRepository>(
       () => CategoryRepositoryImpl(categoryRemoteDataSource: sl()));
 
-  sl.registerLazySingleton<VariantRepository>(
-      () => VariantRepositoryImpl(variantRemoteDataSource: sl()));
+  // sl.registerLazySingleton<VariantRepository>(
+  //     () => VariantRepositoryImpl(variantRemoteDataSource: sl()));
 
   sl.registerLazySingleton<SalesRepository>(
       () => SalesRepositoryImpl(salesRemoteDataSource: sl()));
@@ -112,8 +112,8 @@ Future<void> init() async {
   sl.registerLazySingleton<CategoryRemoteDataSource>(
       () => CategoryRemoteDataSourceImpl());
 
-  sl.registerLazySingleton<VariantRemoteDataSource>(
-      () => VariantRemoteDataSourceImpl());
+  // sl.registerLazySingleton<VariantRemoteDataSource>(
+  //     () => VariantRemoteDataSourceImpl());
 
   sl.registerLazySingleton<SalesRemoteDataSource>(
       () => SalesRemoteDataSourceImpl());
@@ -176,8 +176,8 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetSortedWatchsByCreationDateUsecase(sl()));
 
   // //products 3D//
-  sl.registerLazySingleton(() => GetAllVariantUsecase(sl()));
-  sl.registerLazySingleton(() => GetOneVariant(sl()));
+  // sl.registerLazySingleton(() => GetAllVariantUsecase(sl()));
+  // sl.registerLazySingleton(() => GetOneVariant(sl()));
 
   // //categories//
   sl.registerLazySingleton(() => GetAllCategoriesUsecase(sl()));

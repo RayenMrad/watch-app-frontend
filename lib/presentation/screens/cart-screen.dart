@@ -1,3 +1,4 @@
+import 'package:clean_arch/core/utils/string_const.dart';
 import 'package:clean_arch/presentation/controller/authentication_controller.dart';
 import 'package:clean_arch/presentation/controller/cart_controller.dart';
 import 'package:clean_arch/presentation/screens/payment-screens/payment-screen.dart';
@@ -5,6 +6,7 @@ import 'package:clean_arch/presentation/widgets/cart/cart-watchs-list.dart';
 import 'package:clean_arch/presentation/widgets/drawer-contents.dart';
 import 'package:clean_arch/presentation/widgets/headers/header.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get.dart';
 
 class CartPage extends StatefulWidget {
@@ -20,24 +22,34 @@ class _CartPageState extends State<CartPage> {
   final AuthenticationController authenticationController = Get.find();
   final CartController cartController = Get.find();
 
+  double totalPrice = 0.0;
+
+  @override
+  void initState() {
+    super.initState();
+    _calculateTotalPrice();
+  }
+
+  void _calculateTotalPrice() {
+    setState(() {
+      totalPrice = cartController.totalPrice;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
       key: _scaffoldKey,
-      drawer: const Drawer(
-        child: DrawerContents(), // Your custom drawer content
-      ),
+      drawer: const Drawer(child: DrawerContents()),
       body: Column(
         children: [
-          // Header Section
           Header(
             title: "Cart Page",
             onMenuPressed: () {
               _scaffoldKey.currentState?.openDrawer();
             },
           ),
-          // Cart Content
           Expanded(
             child: Container(
               decoration: const BoxDecoration(
@@ -53,49 +65,61 @@ class _CartPageState extends State<CartPage> {
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: GetBuilder<CartController>(
-                    init: CartController(),
-                    builder: (cartController) {
+                  child: FutureBuilder(
+                    future: cartController.aaa(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(
+                          child: CircularProgressIndicator.adaptive(),
+                        );
+                      } else if (snapshot.hasError) {
+                        return const Center(
+                          child: Text('Error loading sales'),
+                        );
+                      } else if (!snapshot.hasData ||
+                          cartController.cartSales.isEmpty) {
+                        return const Center(
+                          child: Text('Cart is empty'),
+                        );
+                      }
+
                       return Column(
                         children: [
                           const SizedBox(height: 20),
-                          // Cart Watch List
                           Expanded(
-                            child: FutureBuilder(
-                              future: cartController
-                                  .getUserCart(cartController.currentCart.id),
-                              builder: (context, snapshot) {
-                                if (snapshot.connectionState ==
-                                    ConnectionState.waiting) {
-                                  return const Center(
-                                    child: CircularProgressIndicator.adaptive(),
-                                  );
-                                } else if (snapshot.hasError) {
-                                  return const Center(
-                                    child: Text('Error loading sales'),
-                                  );
-                                } else if (snapshot.hasData &&
-                                    cartController
-                                        .currentCart.sales.isNotEmpty) {
-                                  return ListView.builder(
-                                    itemCount:
-                                        cartController.currentCart.sales.length,
-                                    itemBuilder: (context, index) {
-                                      return CartWatchList(
-                                          sales:
-                                              cartController.cartSales[index]);
-                                    },
-                                  );
-                                } else {
-                                  return const Center(
-                                    child: Text('Cart is empty'),
-                                  );
-                                }
+                            child: ListView.builder(
+                              itemCount: cartController.cartSales.length,
+                              itemBuilder: (context, index) {
+                                final saleItem =
+                                    cartController.cartSales[index];
+
+                                return Slidable(
+                                  key: ValueKey(saleItem.id),
+                                  endActionPane: ActionPane(
+                                    motion: const ScrollMotion(),
+                                    children: [
+                                      SlidableAction(
+                                        onPressed: (context) {
+                                          cartController
+                                              .deleteSale(saleItem.id!);
+                                          _calculateTotalPrice();
+                                        },
+                                        backgroundColor: Colors.red,
+                                        foregroundColor: Colors.white,
+                                        icon: Icons.delete,
+                                        label: 'Delete',
+                                      ),
+                                    ],
+                                  ),
+                                  child: CartWatchList(
+                                    sales: saleItem,
+                                    onUpdate: _calculateTotalPrice,
+                                  ),
+                                );
                               },
                             ),
                           ),
                           const SizedBox(height: 20),
-                          // Total Price and Continue Button
                           Container(
                             padding: const EdgeInsets.symmetric(
                                 vertical: 10, horizontal: 15),
@@ -105,8 +129,8 @@ class _CartPageState extends State<CartPage> {
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: const [
-                                Text(
+                              children: [
+                                const Text(
                                   "Total Price:",
                                   style: TextStyle(
                                     fontSize: 15,
@@ -114,14 +138,19 @@ class _CartPageState extends State<CartPage> {
                                     color: Colors.white,
                                   ),
                                 ),
-                                Text(
-                                  "4000 dt",
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                  ),
-                                ),
+                                GetBuilder(
+                                    id: ControllerID.SALE_QUANTITY,
+                                    init: CartController(),
+                                    builder: (controller) {
+                                      return Text(
+                                        "${controller.totalPrice.toStringAsFixed(2)} dt",
+                                        style: const TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                      );
+                                    }),
                               ],
                             ),
                           ),
@@ -140,8 +169,9 @@ class _CartPageState extends State<CartPage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) =>
-                                        const PaymentMethodScreen(),
+                                    builder: (context) => PaymentMethodScreen(
+                                      totalPrice: totalPrice,
+                                    ),
                                   ),
                                 );
                               },

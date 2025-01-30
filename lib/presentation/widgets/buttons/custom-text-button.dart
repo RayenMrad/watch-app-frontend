@@ -7,16 +7,18 @@ class CustomTextButton extends StatelessWidget {
   final VoidCallback onPressed;
   final String text;
   final Color textColor;
+  final Icon? icon; // Icon can be nullable, but should be a widget
 
-  const CustomTextButton({
-    Key? key,
-    required this.width,
-    required this.height,
-    required this.color,
-    required this.onPressed,
-    required this.text,
-    required this.textColor,
-  }) : super(key: key);
+  const CustomTextButton(
+      {Key? key,
+      required this.width,
+      required this.height,
+      required this.color,
+      required this.onPressed,
+      required this.text,
+      required this.textColor,
+      this.icon})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,9 +31,24 @@ class CustomTextButton extends StatelessWidget {
       ),
       child: TextButton(
         onPressed: onPressed,
-        child: Text(
-          text,
-          style: TextStyle(color: textColor),
+        child: Row(
+          mainAxisAlignment:
+              MainAxisAlignment.center, // Centering the text and icon
+          children: [
+            if (icon != null) ...[
+              // Only show the icon if it's provided
+              Icon(
+                icon!.icon, // Use the passed icon
+                color: Colors.white, // Set the color to white
+                size: 18, // You can customize the size if needed
+              ),
+              SizedBox(width: 8), // Optional spacing between the icon and text
+            ],
+            Text(
+              text,
+              style: TextStyle(color: textColor),
+            ),
+          ],
         ),
       ),
     );

@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 
 class CategoryController extends GetxController {
   List<Category> allCategories = [];
+  String selectedCategory = ''; // Default to "All"
 
   Future<bool> getAllCategories() async {
     final res = await GetAllCategoriesUsecase(sl())();
@@ -12,5 +13,18 @@ class CategoryController extends GetxController {
       return allCategories = r;
     });
     return true;
+  }
+
+  void updateSelectedCategory(String? categoryId) {
+    selectedCategory = categoryId ?? 'all';
+    update();
+  }
+
+  @override
+  void onInit() {
+    if (selectedCategory == '') {
+      selectedCategory = 'all';
+    }
+    super.onInit();
   }
 }

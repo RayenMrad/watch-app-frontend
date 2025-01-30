@@ -1,4 +1,5 @@
 import 'package:clean_arch/presentation/controller/authentication_controller.dart';
+import 'package:clean_arch/presentation/screens/auth-screens/update-password-screen.dart';
 import 'package:clean_arch/presentation/screens/profile-screens/edit-profile-screen.dart';
 import 'package:clean_arch/presentation/widgets/headers/Payment-header.dart';
 import 'package:clean_arch/presentation/widgets/buttons/custom-text-button.dart';
@@ -51,7 +52,23 @@ class ProfilePage extends StatelessWidget {
                                     ),
                                   );
                                 },
+                                icon: Icon(Icons.edit_outlined),
                                 text: "Edit Profile",
+                                textColor: Colors.white),
+                            const SizedBox(height: 20),
+                            CustomTextButton(
+                                width: 150,
+                                height: 40,
+                                color: Color(0xFFAF6767),
+                                onPressed: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (_) => UpdatePasswordPage(),
+                                    ),
+                                  );
+                                },
+                                icon: Icon(Icons.lock_outlined),
+                                text: "Edit Password",
                                 textColor: Colors.white),
                             const SizedBox(height: 20),
                             TextFormField(

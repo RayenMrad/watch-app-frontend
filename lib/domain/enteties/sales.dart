@@ -1,14 +1,19 @@
-class Sales {
-  final String id;
+import 'package:equatable/equatable.dart';
+
+class Sales extends Equatable {
+  String? id;
   int quantity;
-  double totalprice;
+  double totalPrice;
   final String userId;
-  final String variantId;
+  final String watchId;
 
   Sales(
-      {required this.id,
+      {this.id,
       required this.quantity,
-      required this.totalprice,
+      required this.totalPrice,
       required this.userId,
-      required this.variantId});
+      required this.watchId});
+
+  @override
+  List<Object?> get props => [id, quantity, totalPrice, userId, watchId];
 }

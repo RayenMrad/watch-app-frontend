@@ -1,3 +1,5 @@
+import 'package:clean_arch/presentation/screens/home-screen.dart';
+import 'package:clean_arch/presentation/screens/main-screen.dart';
 import 'package:flutter/material.dart';
 
 class PaymentSuccessPage extends StatelessWidget {
@@ -70,7 +72,11 @@ class PaymentSuccessPage extends StatelessWidget {
                   ),
                   child: TextButton(
                     onPressed: () {
-                      Navigator.pop(context); // Dismiss action
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => MainScreen(),
+                        ),
+                      ); // Dismiss action
                     },
                     child: const Text(
                       "Dismiss",

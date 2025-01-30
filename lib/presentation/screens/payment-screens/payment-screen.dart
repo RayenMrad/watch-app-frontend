@@ -1,8 +1,11 @@
+import 'package:clean_arch/presentation/screens/payment-screens/payment-success-screen.dart';
 import 'package:clean_arch/presentation/widgets/headers/Payment-header.dart';
 import 'package:flutter/material.dart';
 
 class PaymentMethodScreen extends StatefulWidget {
-  const PaymentMethodScreen({super.key});
+  final double totalPrice;
+
+  const PaymentMethodScreen({super.key, required this.totalPrice});
 
   @override
   _PaymentMethodScreenState createState() => _PaymentMethodScreenState();
@@ -13,6 +16,11 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Assuming fixed delivery fee and discount values
+    double deliveryFee = 10.0;
+    double discount = 50.0;
+    double finalTotal = widget.totalPrice + deliveryFee - discount;
+
     return Scaffold(
       body: Stack(
         children: [
@@ -41,7 +49,8 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                                 fontSize: 18, fontWeight: FontWeight.bold),
                           ),
                           ListTile(
-                            leading: Image.asset('assets/images/mastercard.png',
+                            leading: Image.network(
+                                'http://192.168.1.13:8000/uploads/images/paiment/mastercard.png',
                                 width: 40),
                             title: const Text('MasterCard'),
                             subtitle: const Text('**** 1234'),
@@ -56,7 +65,8 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                             ),
                           ),
                           ListTile(
-                            leading: Image.asset('assets/images/visa.png',
+                            leading: Image.network(
+                                'http://192.168.1.13:8000/uploads/images/paiment/visa.png',
                                 width: 40),
                             title: const Text('Visa'),
                             subtitle: const Text('**** 5678'),
@@ -71,13 +81,14 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                             ),
                           ),
                           TextButton(
-                              onPressed: () {},
-                              child: Center(
-                                child: const Text(
-                                  '+ Add other card',
-                                  style: TextStyle(color: Colors.blue),
-                                ),
-                              )),
+                            onPressed: () {},
+                            child: const Center(
+                              child: Text(
+                                '+ Add other card',
+                                style: TextStyle(color: Colors.blue),
+                              ),
+                            ),
+                          ),
                           const Divider(),
                           const Text(
                             'Bank Account',
@@ -85,7 +96,8 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                                 fontSize: 18, fontWeight: FontWeight.bold),
                           ),
                           ListTile(
-                            leading: Image.asset('assets/images/bank.png',
+                            leading: Image.network(
+                                'http://192.168.1.13:8000/uploads/images/paiment/bank.png',
                                 width: 40),
                             title: const Text('Al Tijari Bank'),
                             subtitle: const Text('IBAN: ****5678'),
@@ -101,8 +113,8 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                           ),
                           TextButton(
                             onPressed: () {},
-                            child: Center(
-                              child: const Text(
+                            child: const Center(
+                              child: Text(
                                 '+ Add Bank',
                                 style: TextStyle(color: Colors.blue),
                               ),
@@ -112,37 +124,42 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                           const Divider(),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: const [
-                              Text('Subtotal:', style: TextStyle(fontSize: 16)),
-                              Text('300 Dt', style: TextStyle(fontSize: 16)),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: const [
-                              Text('Delivery Fee:',
+                            children: [
+                              const Text('Subtotal:',
                                   style: TextStyle(fontSize: 16)),
-                              Text('10 Dt', style: TextStyle(fontSize: 16)),
+                              Text('${widget.totalPrice.toStringAsFixed(2)} Dt',
+                                  style: const TextStyle(fontSize: 16)),
                             ],
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: const [
-                              Text('Discount:', style: TextStyle(fontSize: 16)),
-                              Text('-50 Dt', style: TextStyle(fontSize: 16)),
+                            children: [
+                              const Text('Delivery Fee:',
+                                  style: TextStyle(fontSize: 16)),
+                              Text('${deliveryFee.toStringAsFixed(2)} Dt',
+                                  style: const TextStyle(fontSize: 16)),
                             ],
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: const [
-                              Text(
+                            children: [
+                              const Text('Discount:',
+                                  style: TextStyle(fontSize: 16)),
+                              Text('-${discount.toStringAsFixed(2)} Dt',
+                                  style: const TextStyle(fontSize: 16)),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
                                 'Total:',
                                 style: TextStyle(
                                     fontSize: 18, fontWeight: FontWeight.bold),
                               ),
                               Text(
-                                '260 Dt',
-                                style: TextStyle(
+                                '${finalTotal.toStringAsFixed(2)} Dt',
+                                style: const TextStyle(
                                     fontSize: 18, fontWeight: FontWeight.bold),
                               ),
                             ],
@@ -151,7 +168,13 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                           SizedBox(
                             width: double.infinity,
                             child: ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                    builder: (_) => const PaymentSuccessPage(),
+                                  ),
+                                );
+                              },
                               style: ElevatedButton.styleFrom(
                                 padding: const EdgeInsets.all(16),
                                 backgroundColor: Colors.black,

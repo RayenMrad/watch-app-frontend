@@ -6,7 +6,6 @@ import 'package:clean_arch/data/data_source/local_data_source/authentication_loc
 import 'package:clean_arch/data/data_source/local_data_source/settings_local_data_source.dart';
 import 'package:clean_arch/data/models/token_model.dart';
 import 'package:clean_arch/data/models/wishlist_model.dart';
-import 'package:clean_arch/domain/enteties/wishlist.dart';
 import 'package:http/http.dart' as http;
 
 abstract class WishlistRemoteDataSource {
@@ -85,10 +84,9 @@ class WishlistRemoteDataSourceImpl implements WishlistRemoteDataSource {
     try {
       final authToken = await token.then((value) => value!.token);
 
-      final url = Uri.parse(ApiConst.updateWishList);
+      final url = Uri.parse("${ApiConst.updateWishList}/${wishlist.id}");
       final body = jsonEncode({
-        "id": wishlist.id,
-        "watchs": wishlist.watchs,
+        "watches": wishlist.watchs,
       });
       final res = await http.put(
         url,

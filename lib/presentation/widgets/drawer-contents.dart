@@ -2,6 +2,7 @@ import 'package:clean_arch/presentation/controller/authentication_controller.dar
 import 'package:clean_arch/presentation/screens/auth-screens/login-page.dart';
 import 'package:clean_arch/presentation/screens/auth-screens/update-password-screen.dart';
 import 'package:clean_arch/presentation/screens/cart-screen.dart';
+import 'package:clean_arch/presentation/screens/main-screen.dart';
 import 'package:clean_arch/presentation/screens/profile-screens/edit-profile-screen.dart';
 import 'package:clean_arch/presentation/screens/favorites-screen.dart';
 import 'package:clean_arch/presentation/screens/home-screen.dart';
@@ -93,7 +94,7 @@ class DrawerContents extends StatelessWidget {
                 ),
                 onTap: () => Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (_) => HomePage(),
+                    builder: (_) => MainScreen(),
                   ),
                 ),
               ),
@@ -203,29 +204,6 @@ class DrawerContents extends StatelessWidget {
                 onTap: () => null,
               ),
 
-              SizedBox(
-                height: 20,
-              ),
-              ListTile(
-                  leading: Icon(
-                    Icons.password_outlined,
-                    size: 30,
-                    color: Colors.black54,
-                  ),
-                  title: Text(
-                    "Update Password",
-                    style: TextStyle(
-                        fontFamily: 'Roboto',
-                        fontWeight: FontWeight.w600,
-                        fontSize: 20),
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => UpdatePasswordPage()),
-                    );
-                  }),
               Spacer(),
               Divider(),
               SizedBox(

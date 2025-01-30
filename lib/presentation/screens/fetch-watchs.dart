@@ -1,3 +1,4 @@
+import 'package:clean_arch/domain/enteties/watch.dart';
 import 'package:clean_arch/presentation/controller/watch_controller.dart';
 import 'package:clean_arch/presentation/screens/watch-screen.dart';
 import 'package:clean_arch/presentation/widgets/product/product_item.dart';
@@ -6,7 +7,7 @@ import 'package:get/get.dart';
 
 class Fetchwatchs extends StatelessWidget {
   final int itemCount;
-  final Future futureFunction;
+  final Future<List<Watch>> futureFunction;
   const Fetchwatchs({
     super.key,
     required this.itemCount,
@@ -15,7 +16,7 @@ class Fetchwatchs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<WatchController>(
+    return GetBuilder(
       init: WatchController(),
       builder: (watchController) {
         return FutureBuilder(
@@ -38,11 +39,11 @@ class Fetchwatchs extends StatelessWidget {
                 itemBuilder: (context, int index) {
                   return InkWell(
                     onTap: () {
+                      watchController.setProductId =
+                          (snapshot.data as List)[index].id;
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (_) => WatchPage(
-                            watch: (snapshot.data as List)[index],
-                          ),
+                          builder: (_) => const WatchPage(),
                         ),
                       );
                     },

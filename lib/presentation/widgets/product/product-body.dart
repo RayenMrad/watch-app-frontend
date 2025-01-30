@@ -92,25 +92,24 @@ class WatchBody extends StatelessWidget {
               color: const Color(0xFFAF6767),
               borderRadius: BorderRadius.circular(10),
             ),
-            child: GetBuilder<CartController>(
+            child: GetBuilder(
               init: CartController(),
               builder: (cartController) {
                 return TextButton(
                   onPressed: () async {
                     final AuthenticationController authController = Get.find();
 
-                    // await cartController.currentCart.addSale(Sales(
-                    //   id: cartController.currentSale.id,
-                    //   quantity: cartController.currentSale.quantity,
-                    //   totalprice: cartController.currentSale.quantity *
-                    //       cartController.getPrice(cartController.currentSale),
-                    //   userId: cartController.currentCart.userId,
-                    //   variantId: cartController.currentSale.variantId,
-                    // ));
+                    final newSale = Sales(
+                        quantity: 1,
+                        totalPrice: watch.price,
+                        userId: authController.currentUser.id!,
+                        watchId: watch.id);
+
+                    await cartController.addSale(newSale);
 
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (_) => const CartPage(/*sale:currentSale*/),
+                        builder: (_) => const CartPage(),
                       ),
                     );
                   },

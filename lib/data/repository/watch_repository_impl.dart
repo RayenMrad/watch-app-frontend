@@ -56,12 +56,15 @@ class WatchRepositoryImpl implements WatchRepository {
               id: e.id,
               name: e.name,
               image: e.image,
+              model3d: e.model3d,
               price: e.price,
               brand: e.brand,
               category: e.category,
               reference: e.reference,
               description: e.description,
-              size: e.size))
+              size: e.size,
+              quantity: e.quantity,
+              saleCount: e.saleCount))
           .toList();
       return right(watchs);
     } on ServerException {
@@ -80,12 +83,15 @@ class WatchRepositoryImpl implements WatchRepository {
               id: e.id,
               name: e.name,
               image: e.image,
+              model3d: e.model3d,
               price: e.price,
               brand: e.brand,
               category: e.category,
               reference: e.reference,
               description: e.description,
-              size: e.size))
+              size: e.size,
+              quantity: e.quantity,
+              saleCount: e.saleCount))
           .toList();
       return right(watchs);
     } on ServerException {
@@ -105,12 +111,15 @@ class WatchRepositoryImpl implements WatchRepository {
               id: e.id,
               name: e.name,
               image: e.image,
+              model3d: e.model3d,
               price: e.price,
               brand: e.brand,
               category: e.category,
               reference: e.reference,
               description: e.description,
-              size: e.size))
+              size: e.size,
+              quantity: e.quantity,
+              saleCount: e.saleCount))
           .toList();
       return right(watchs);
     } on ServerException {

@@ -2,40 +2,87 @@ import 'package:clean_arch/core/utils/string_const.dart';
 import 'package:clean_arch/di.dart';
 import 'package:clean_arch/domain/enteties/cart.dart';
 import 'package:clean_arch/domain/enteties/sales.dart';
-import 'package:clean_arch/domain/enteties/variant.dart';
 import 'package:clean_arch/domain/enteties/watch.dart';
 import 'package:clean_arch/domain/usecases/cart_usecases/create_cart_usecase.dart';
 import 'package:clean_arch/domain/usecases/cart_usecases/get_cart_by_id_usecase.dart';
 import 'package:clean_arch/domain/usecases/cart_usecases/update_cart_usecase.dart';
 import 'package:clean_arch/domain/usecases/sales_usecases/add_sales_usecase.dart';
-import 'package:clean_arch/domain/usecases/sales_usecases/create_sales_usecase.dart';
 import 'package:clean_arch/domain/usecases/sales_usecases/delete_sales_usecase.dart';
 import 'package:clean_arch/domain/usecases/sales_usecases/get_sales_by_id_usecase.dart';
 import 'package:clean_arch/domain/usecases/sales_usecases/update_sales_usecase.dart';
-import 'package:clean_arch/domain/usecases/variant_usecases/get_one_variant_usecase.dart';
+import 'package:clean_arch/domain/usecases/watch_usecases/get_watch_by_id_usecase.dart';
 import 'package:clean_arch/presentation/controller/watch_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 
 class CartController extends GetxController {
   late Cart currentCart;
-  late Sales currentSale;
   List<Sales> cartSales = [];
-  List<Variant> cartWatchs = [];
-
+  List<Watch> cartProducts = [];
   double totalPrice = 0.0;
-
-  List<String> get getCartSalesId => cartSales.map((e) => e.id!).toList();
-  List<String> get getCartVariantsId =>
-      cartSales.map((e) => e.variantId).toList();
 
   Future<Cart> getUserCart(String userId) async {
     cartSales = [];
+    cartProducts = [];
     final res = await GetCartByIdUsecase(sl())(userId: userId);
     res.fold((l) => null, (r) => currentCart = r);
     await getCartSales();
+    print('all sales $cartSales');
+    await getCartProducts();
+    getReclamationPrice();
     return currentCart;
+  }
+
+  Future<bool> aaa() async {
+    await Future.delayed(Duration(seconds: 1));
+    return true;
+  }
+
+  Future<void> getCartProducts() async {
+    print("cart $cartSales 0");
+    for (var element in cartSales) {
+      final res = await GetWatchByIdUsecase(sl())(wID: element.watchId);
+      res.fold((l) => null, (r) => cartProducts.add(r));
+    }
+  }
+
+  Future<void> incrementSaleQuantity(String saleId) async {
+    final WatchController watchController = Get.find();
+    final Sales sale = cartSales.firstWhere((element) => element.id == saleId);
+    if (sale.quantity <
+        cartProducts
+            .firstWhere((element) => sale.watchId == element.id)
+            .quantity) {
+      sale.quantity++;
+      sale.totalPrice = double.parse((watchController.getPrice(watchController
+                  .allWatchs
+                  .firstWhere((element) => element.id == sale.watchId)) *
+              sale.quantity)
+          .toStringAsFixed(2));
+      await UpdateSalesUsecase(sl())(sale);
+    }
+    getReclamationPrice();
+    update([ControllerID.SALE_QUANTITY]);
+  }
+
+  Future<void> decrimentSaleQuantity(String saleId) async {
+    final WatchController watchController = Get.find();
+
+    final Sales sale = cartSales.firstWhere((element) => element.id == saleId);
+    if (sale.quantity > 1) {
+      sale.quantity--;
+      sale.totalPrice = double.parse((watchController.getPrice(watchController
+                  .allWatchs
+                  .firstWhere((element) => element.id == sale.watchId)) *
+              sale.quantity)
+          .toStringAsFixed(2));
+      await UpdateSalesUsecase(sl())(sale);
+    }
+    getReclamationPrice();
+
+    update([ControllerID.SALE_QUANTITY]);
   }
 
   Future<void> addUserCart(String userId) async {
@@ -48,112 +95,62 @@ class CartController extends GetxController {
 
   Future<List<Sales>> getCartSales() async {
     cartSales = [];
-    for (var x in currentCart.sales) {
-      final res = await GetSalesByIdUsecase(sl())(salesId: x);
+    print("sale before $cartSales 1");
+    print("products before ${currentCart.sales}");
+
+    for (var element in currentCart.sales) {
+      final res = await GetSalesByIdUsecase(sl())(element);
       res.fold((l) => null, (r) {
         cartSales.add(r);
       });
+      print("sale after $cartSales 2");
     }
+
     return cartSales;
   }
 
-  Future<void> getCartWatchs() async {
-    cartWatchs = [];
-    for (var element in getCartVariantsId) {
-      final res = await GetOneVariant(sl())(element);
-      res.fold((l) => null, (r) async {
-        final s = cartSales.firstWhere((e) => e.variantId == element);
+  List<String> get getCartSalesId => cartSales.map((e) => e.id!).toList();
+  List<String> get getCartmodelId => cartSales.map((e) => e.watchId).toList();
 
-        if (r.quantity < s.quantity || r.quantity < 1) {
-          cartSales.firstWhere((e) => e.variantId == element).quantity = 0;
-
-          // print(productController.getPrice(prods.firstWhere((elm) => elm.id==r.product)));
-
-          //    cartSales.firstWhere((e) => e.modelId==element).totalPrice=r.quantity*productController.getPrice(prods.firstWhere((elm) => elm.id==s.productId));
-          //await UpdateSaleUsecase(sl())( cartSales.firstWhere((e) => e.modelId==element));
-        }
-        cartWatchs.add(r);
-      });
-    }
-  }
-
-  Future<void> incrementSaleQuantity(String saleId) async {
-    final WatchController watchController = Get.find();
-    final Sales sale = cartSales.firstWhere((element) => element.id == saleId);
-    if (sale.quantity <
-        cartWatchs
-            .firstWhere((element) => sale.variantId == element.id)
-            .quantity) {
-      sale.quantity++;
-      /*sale.totalprice = double.parse((watchController.getPrice(
-                  watchController.allWatchs.firstWhere((element) =>
-                      element.id == getWatchIdFromVariant(sale.variantId))) *
-              sale.quantity)
-          .toStringAsFixed(2));*/
-      await UpdateSalesUsecase(sl())(sale);
-    }
-    // getReclamationPrice();
-    update([ControllerID.SALE_QUANTITY]);
-  }
-
-  Future<void> decrimentSaleQuantity(String saleId) async {
-    final WatchController watchController = Get.find();
-
-    final Sales sale = cartSales.firstWhere((element) => element.id == saleId);
-    if (sale.quantity > 1) {
-      sale.quantity--;
-      /*sale.totalprice = double.parse((watchController.getPrice(
-                  watchController.allWatchs.firstWhere((element) =>
-                      element.id == getWatchIdFromVariant(sale.variantId))) *
-              sale.quantity)
-          .toStringAsFixed(2));*/
-      await UpdateSalesUsecase(sl())(sale);
-    }
-    // getReclamationPrice();
-
-    update([ControllerID.SALE_QUANTITY]);
-  }
-
-  Future<String?> getWatchIdFromVariant(String variantId) async {
-    final res = await GetOneVariant(sl())(variantId);
-    String? watchId;
-    res.fold(
-      (l) => print("Failed to retrieve variant."),
-      (r) => watchId = r.watchId,
-    );
-    return watchId;
-  }
-
-  Future<void> addSale(Sales newSale) async {
-    print('sales tracking add sale${newSale.variantId}');
-    if (!getCartVariantsId.contains(newSale.variantId)) {
+  Future addSale(Sales newSale) async {
+    if (!getCartmodelId.contains(newSale.watchId)) {
       final addsale = await AddSaleUsecase(sl()).call(newSale);
       addsale.fold((l) => null, (r) async {
         cartSales.add(r);
+        print("$cartSales 3");
         await _updateSailes();
       });
     } else {
       Fluttertoast.showToast(
           msg: 'product already in cart!',
           toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.TOP,
+          gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 1,
-          backgroundColor: Color(0xFFAF6767),
+          backgroundColor: Colors.black,
           textColor: Colors.white,
           fontSize: 16.0);
     }
     await getUserCart(newSale.userId);
-    update();
+  }
+
+  void getReclamationPrice() {
+    double sum = 0.0;
+    for (var sale in cartSales) {
+      sum += sale.totalPrice;
+    }
+    totalPrice = sum;
   }
 
   Future _updateSailes() async {
     currentCart.sales = getCartSalesId;
-    await UpdateCartUsecase(sl()).call(cart: currentCart);
+    print('update cart ${currentCart.sales} 4');
+    final rs = await UpdateCartUsecase(sl()).call(cart: currentCart);
+    rs.fold((l) => null, (r) async {});
     update();
   }
 
-  Future<void> deleteSale(String saleId) async {
-    await DeleteSalesUsecase(sl()).call(salesId: saleId);
+  Future deleteSale(String saleId) async {
+    await DeleteSalesUsecase(sl()).call(saleId);
     cartSales.removeWhere((element) => element.id == saleId);
     currentCart.sales = getCartSalesId;
     await _updateSailes();

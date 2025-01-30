@@ -1,3 +1,4 @@
+import 'package:clean_arch/core/utils/colors.dart';
 import 'package:clean_arch/core/utils/string_const.dart';
 import 'package:clean_arch/presentation/controller/category_controller.dart';
 import 'package:clean_arch/presentation/controller/watch_controller.dart';
@@ -17,6 +18,10 @@ class CatScreen extends StatefulWidget {
 
 class _CatScreenState extends State<CatScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  final CategoryController categoryController = Get.put(CategoryController());
+
+  final WatchController watchController = Get.put(WatchController());
 
   @override
   Widget build(BuildContext context) {
@@ -83,34 +88,61 @@ class _CatScreenState extends State<CatScreen> {
                                   future: controller.getAllCategories(),
                                   builder: (context, snapshot) {
                                     if (snapshot.hasData) {
+                                      final List<Map<String, dynamic>>
+                                          categories = [
+                                        {'id': 'all', 'name': 'all'},
+                                        ...controller.allCategories
+                                            .map((category) => {
+                                                  'id': category.id,
+                                                  'name': category.name,
+                                                })
+                                            .toList(),
+                                      ];
                                       return ListView.builder(
                                         scrollDirection: Axis.horizontal,
-                                        itemCount:
-                                            controller.allCategories.length,
-                                        itemBuilder: (_, index) => Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              color: Color(0xFFAF6767),
-                                              border: Border.all(
-                                                color: Color(0xFFAF6767),
-                                                width: 1.5,
-                                              ),
-                                              borderRadius:
-                                                  BorderRadius.circular(15),
-                                            ),
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: Text(
+                                        itemCount: categories.length,
+                                        itemBuilder: (_, index) {
+                                          final category = categories[index];
+                                          final isSelected =
+                                              controller.selectedCategory ==
+                                                  category['id'];
+                                          return Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: GestureDetector(
+                                              onTap: () {
                                                 controller
-                                                    .allCategories[index].name,
-                                                style: TextStyle(
-                                                    color: Colors.white),
+                                                    .updateSelectedCategory(
+                                                        category['id']);
+                                                watchController.filterWatchs(
+                                                    category['id']);
+                                              },
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  color: isSelected
+                                                      ? Color(0xFFAF6767)
+                                                      : Colors.grey.shade600,
+                                                  border: Border.all(
+                                                    color: isSelected
+                                                        ? Color(0xFFAF6767)
+                                                        : Colors.grey.shade600,
+                                                    width: 1.5,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(15),
+                                                ),
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: Text(
+                                                    category['name'],
+                                                    style: TextStyle(
+                                                        color: Colors.white),
+                                                  ),
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                        ),
+                                          );
+                                        },
                                       );
                                     } else if (snapshot.connectionState ==
                                         ConnectionState.waiting) {
@@ -136,7 +168,53 @@ class _CatScreenState extends State<CatScreen> {
                                 return FutureBuilder(
                                   future: watchcontoller.getAllWatchs(),
                                   builder: (context, snapshot) {
-                                    if (snapshot.connectionState ==
+                                    if (snapshot.hasData) {
+                                      print(
+                                          "Filtered watchs: ${watchcontoller.filtredWatchs.length}");
+                                      if (watchController
+                                          .filtredWatchs.isEmpty) {
+                                        return const Center(
+                                          child: Text(
+                                            'No Available Watches',
+                                            style: TextStyle(
+                                                fontSize: 18,
+                                                color: Colors.grey),
+                                          ),
+                                        );
+                                      } else {
+                                        return GridView.builder(
+                                          gridDelegate:
+                                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                            crossAxisCount: 2,
+                                            crossAxisSpacing: 16,
+                                            mainAxisSpacing: 16,
+                                            childAspectRatio: 3 / 3,
+                                          ),
+                                          itemCount: watchcontoller
+                                              .filtredWatchs.length,
+                                          itemBuilder: (context, index) {
+                                            final watch = watchcontoller
+                                                .filtredWatchs[index];
+                                            return InkWell(
+                                              onTap: () {
+                                                print(watchcontoller
+                                                    .watchsList[index].id);
+                                                watchController.setProductId =
+                                                    watch.id;
+                                                Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                    builder: (_) => WatchPage(),
+                                                  ),
+                                                );
+                                              },
+                                              child: WatchItem(
+                                                watch: watch,
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      }
+                                    } else if (snapshot.connectionState ==
                                         ConnectionState.waiting) {
                                       return const Center(
                                         child: CircularProgressIndicator
@@ -146,42 +224,11 @@ class _CatScreenState extends State<CatScreen> {
                                       return const Center(
                                         child: Text('Error loading watches'),
                                       );
-                                    } else if (!snapshot.hasData ||
-                                        snapshot.data == null) {
+                                    } else {
                                       return const Center(
                                         child: Text('No watches available'),
                                       );
                                     }
-                                    return GridView.builder(
-                                      gridDelegate:
-                                          const SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 2,
-                                        crossAxisSpacing: 16,
-                                        mainAxisSpacing: 16,
-                                        childAspectRatio: 3 / 3,
-                                      ),
-                                      itemCount:
-                                          watchcontoller.watchsList.length,
-                                      itemBuilder: (context, index) {
-                                        return InkWell(
-                                          onTap: () {
-                                            print(watchcontoller
-                                                .watchsList[index].id);
-                                            Navigator.of(context).push(
-                                              MaterialPageRoute(
-                                                builder: (_) => WatchPage(
-                                                    watch: watchcontoller
-                                                        .watchsList[index]),
-                                              ),
-                                            );
-                                          },
-                                          child: WatchItem(
-                                            watch: watchcontoller
-                                                .watchsList[index],
-                                          ),
-                                        );
-                                      },
-                                    );
                                   },
                                 );
                               },

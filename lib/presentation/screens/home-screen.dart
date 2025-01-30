@@ -3,14 +3,11 @@ import 'package:clean_arch/presentation/controller/watch_controller.dart';
 import 'package:clean_arch/presentation/screens/auth-screens/signUp-page.dart';
 import 'package:clean_arch/presentation/screens/cat-screen.dart';
 import 'package:clean_arch/presentation/screens/fetch-watchs.dart';
-import 'package:clean_arch/presentation/screens/watch-screen.dart';
 import 'package:clean_arch/presentation/widgets/drawer-contents.dart';
 import 'package:clean_arch/presentation/widgets/headers/header.dart';
 import 'package:clean_arch/presentation/widgets/headers/home_select_header.dart';
-import 'package:clean_arch/presentation/widgets/product/product_item.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -175,30 +172,6 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
-          ),
-        ],
-      ),
-      bottomNavigationBar: GNav(
-        gap: 8,
-        backgroundColor: Colors.black,
-        color: Colors.white,
-        activeColor: Color(0xFFAF6767),
-        tabs: [
-          GButton(
-            icon: Icons.home_outlined,
-            text: "Home",
-          ),
-          GButton(
-            icon: Icons.category_outlined,
-            text: "Categories",
-          ),
-          GButton(
-            icon: Icons.shopping_basket_outlined,
-            text: "WishList",
-          ),
-          GButton(
-            icon: Icons.settings_outlined,
-            text: "Settings",
           ),
         ],
       ),

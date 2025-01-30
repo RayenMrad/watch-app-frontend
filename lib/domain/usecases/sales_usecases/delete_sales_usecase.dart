@@ -3,10 +3,10 @@ import 'package:clean_arch/domain/repository/sales_repository.dart';
 import 'package:dartz/dartz.dart';
 
 class DeleteSalesUsecase {
-  final SalesRepository _salesRepository;
+  final SalesRepository repository;
 
-  const DeleteSalesUsecase(this._salesRepository);
+  const DeleteSalesUsecase(this.repository);
 
-  Future<Either<Failure, Unit>> call({required String salesId}) async =>
-      await _salesRepository.deleteSales(salesId: salesId);
+  Future<Either<Failure, Unit>> call(String salesId) async =>
+      await repository.deleteSales(salesId);
 }

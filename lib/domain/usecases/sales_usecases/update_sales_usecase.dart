@@ -4,10 +4,10 @@ import 'package:clean_arch/domain/repository/sales_repository.dart';
 import 'package:dartz/dartz.dart';
 
 class UpdateSalesUsecase {
-  final SalesRepository _salesRepository;
+  final SalesRepository repository;
 
-  const UpdateSalesUsecase(this._salesRepository);
+  const UpdateSalesUsecase(this.repository);
 
   Future<Either<Failure, Unit>> call(Sales sale) async =>
-      await _salesRepository.updateSales(sale);
+      await repository.updateSales(sale);
 }

@@ -1,20 +1,17 @@
 import 'package:clean_arch/core/utils/string_const.dart';
 import 'package:clean_arch/di.dart';
-import 'package:clean_arch/domain/enteties/variant.dart';
+import 'package:clean_arch/domain/enteties/watch.dart';
 import 'package:clean_arch/domain/enteties/wishlist.dart';
-import 'package:clean_arch/domain/usecases/variant_usecases/get_one_variant_usecase.dart';
-import 'package:clean_arch/domain/usecases/variant_usecases/get_all_variant_usecase.dart';
+import 'package:clean_arch/domain/usecases/watch_usecases/get_watch_by_id_usecase.dart';
 import 'package:clean_arch/domain/usecases/wishlist_usecases/create_wishlist_usecase.dart';
-import 'package:clean_arch/domain/usecases/wishlist_usecases/delete_wishlist_usecase.dart';
 import 'package:clean_arch/domain/usecases/wishlist_usecases/get_wishlist_usecase.dart';
 import 'package:clean_arch/domain/usecases/wishlist_usecases/update_wishlist_usecase.dart';
-import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+
 import 'package:get/get.dart';
 
 class WishlistController extends GetxController {
   late Wishlist currentWishlist;
-  List<Variant> wishlistModel = [];
+  List<Watch> wishlistModel = [];
 
   Future<Wishlist> getWishList(String userId) async {
     final res = await GetWishlistUsecase(sl())(wishlistId: userId);
@@ -31,10 +28,11 @@ class WishlistController extends GetxController {
     await UpdateWishListUsecase(sl())(wishlist: newWishList);
   }
 
-  Future<List<Variant>> getWishlistTextures() async {
+  Future<List<Watch>> getWishlistTextures() async {
     wishlistModel = [];
     for (var element in currentWishlist.watchs) {
-      final res = await GetOneVariant(sl())(element);
+      final res = await GetWatchByIdUsecase(sl())(wID: element);
+      print("Result for element $element: $res");
       res.fold((l) => null, (r) => wishlistModel.add(r));
     }
     return wishlistModel;
@@ -46,14 +44,19 @@ class WishlistController extends GetxController {
 
   List<String> get getWishlistIds => wishlistModel.map((e) => e.id).toList();
 
-  Future toggleLikedTexture(Variant texture) async {
+  Future toggleLikedTexture(Watch texture) async {
+    print("wishlist  ${texture.id}");
+    print("wishlist ${wishlistModel.toString()}");
     if (wishlistModel.contains(texture)) {
       wishlistModel.remove(texture);
+      print("removed");
     } else {
       wishlistModel.add(texture);
+      print("added");
     }
     currentWishlist.watchs = getWishlistIds;
     await updateUserWishlist(currentWishlist);
-    update([ControllerID.LIKE_PRODUCT]);
+    print("wishlist");
+    update(/*[ControllerID.LIKE_PRODUCT]*/);
   }
 }

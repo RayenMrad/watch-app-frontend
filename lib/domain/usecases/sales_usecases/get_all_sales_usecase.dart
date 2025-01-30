@@ -4,10 +4,10 @@ import 'package:clean_arch/domain/repository/sales_repository.dart';
 import 'package:dartz/dartz.dart';
 
 class GetAllSalesUsecase {
-  final SalesRepository _salesRepository;
+  final SalesRepository repository;
 
-  const GetAllSalesUsecase(this._salesRepository);
+  const GetAllSalesUsecase(this.repository);
 
-  Future<Either<Failure, List<Sales>>> call({required String userId}) async =>
-      _salesRepository.getAllSales(userId: userId);
+  Future<Either<Failure, List<Sales>>> call(String userId) async =>
+      repository.getAllSales(userId);
 }

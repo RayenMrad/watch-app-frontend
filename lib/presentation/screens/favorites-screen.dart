@@ -114,7 +114,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                                           ),
                                           // itemCount: wishlist.watchs.length,
                                           itemCount: wishlistController
-                                              .currentWishlist.watchs.length,
+                                              .wishlistModel.length,
 
                                           itemBuilder: (context, int index) {
                                             // final watchId =
@@ -123,21 +123,15 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                                             //     .getWatchById(watchId);
                                             return InkWell(
                                               onTap: () {
+                                                watchController.setProductId =
+                                                    wishlistController
+                                                        .wishlistModel[index]
+                                                        .id;
                                                 print(watchController
                                                     .allWatchs.length);
                                                 Navigator.of(context).push(
                                                   MaterialPageRoute(
-                                                    builder: (_) => WatchPage(
-                                                      // watch: watch,
-                                                      watch: watchController
-                                                          .allWatchs
-                                                          .firstWhere((e) =>
-                                                              e.id ==
-                                                              wishlistController
-                                                                  .wishlistModel[
-                                                                      index]
-                                                                  .watchId),
-                                                    ),
+                                                    builder: (_) => WatchPage(),
                                                   ),
                                                 );
                                               },

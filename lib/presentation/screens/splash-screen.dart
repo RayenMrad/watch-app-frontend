@@ -5,12 +5,11 @@ import 'package:clean_arch/domain/usecases/authentication_usecases/get_user_by_i
 import 'package:clean_arch/presentation/controller/authentication_controller.dart';
 import 'package:clean_arch/presentation/controller/cart_controller.dart';
 import 'package:clean_arch/presentation/controller/category_controller.dart';
-import 'package:clean_arch/presentation/controller/variant_controller.dart';
+import 'package:clean_arch/presentation/controller/main_controller.dart';
 import 'package:clean_arch/presentation/controller/watch_controller.dart';
 import 'package:clean_arch/presentation/controller/wishlist_controller.dart';
 import 'package:clean_arch/presentation/screens/auth-screens/login-page.dart';
-import 'package:clean_arch/presentation/screens/auth-screens/signUp-page.dart';
-import 'package:clean_arch/presentation/screens/home-screen.dart';
+import 'package:clean_arch/presentation/screens/main-screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -66,7 +65,8 @@ class _SplashScreenState extends State<SplashScreen>
     Get.put(CategoryController());
     Get.put(WishlistController());
     Get.put(CartController());
-    Get.put(VariantController());
+    // Get.put(VariantController());
+    Get.put(MainController());
 
     // Get.put(MainScreenController());
     // Get.put(SupplierController());
@@ -75,9 +75,11 @@ class _SplashScreenState extends State<SplashScreen>
     // final SettingsController settingsController = Get.find();
     final AuthenticationController authController = Get.find();
     final WatchController watchController = Get.find();
+    final CategoryController categoryController = Get.find();
     final WishlistController wishListController = Get.find();
     final CartController cartController = Get.find();
-    final VariantController variantController = Get.find();
+    // final VariantController variantController = Get.find();
+    final MainController mainController = Get.find();
 
     // final lang = await settingsController.loadLocale();
     // settingsController.setLocal(lang);
@@ -111,7 +113,7 @@ class _SplashScreenState extends State<SplashScreen>
       Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-              builder: (_) => res ? const HomePage() : const LoginPage()));
+              builder: (_) => res ? const MainScreen() : const LoginPage()));
     });
   }
 
