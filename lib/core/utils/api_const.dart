@@ -27,8 +27,9 @@ class ApiConst {
 
   //command apis
   static const addCommand = '$baseUrl/addCommand';
+  static const getAllCommands = '$baseUrl/commands';
   static const getOneCommand = '$baseUrl/command';
-  static const cancelCommand = '$baseUrl/cancelCommand';
+  static const updateCommandStatus = '$baseUrl/updateStatus';
 
   //sales apis
   static const addSales = '$baseUrl/addSales'; //create sale

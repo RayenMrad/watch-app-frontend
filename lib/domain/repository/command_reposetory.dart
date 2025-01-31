@@ -4,10 +4,12 @@ import 'package:clean_arch/domain/enteties/sales.dart';
 import 'package:dartz/dartz.dart';
 
 abstract class CommandRepository {
-  Future<Either<Failure, Unit>> createCommand(
-      {required String userId, required List<Sales> sales});
+  Future<Either<Failure, Command>> createCommand(Command newCommand);
 
-  Future<Either<Failure, Command>> getCommandById({required String commandId});
+  Future<Either<Failure, List<Command>>> getAllCommands(String userId);
 
-  Future<Either<Failure, Unit>> cancelCommand({required String commandId});
+  Future<Either<Failure, Command>> getCommandById(String commandId);
+
+  Future<Either<Failure, Unit>> updateCommandStatus(
+      String commandId, String status);
 }

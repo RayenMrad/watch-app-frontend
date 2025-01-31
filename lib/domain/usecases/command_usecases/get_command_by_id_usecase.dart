@@ -8,6 +8,6 @@ class GetCommandByIdUsecase {
 
   const GetCommandByIdUsecase(this._commandRepository);
 
-  Future<Either<Failure, Command>> call({required String commandId}) async =>
-      _commandRepository.getCommandById(commandId: commandId);
+  Future<Either<Failure, Command>> call(String commandId) async =>
+      _commandRepository.getCommandById(commandId);
 }

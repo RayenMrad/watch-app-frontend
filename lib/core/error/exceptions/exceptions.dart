@@ -49,6 +49,11 @@ class CartNotFoundException implements Exception {
   CartNotFoundException([this.message = "Cart Not Found"]);
 }
 
+class CommandNotFoundException implements Exception {
+  final String? message;
+  CommandNotFoundException([this.message = "Command Not Found"]);
+}
+
 class RefreshTokenException implements Exception {}
 
 class BadOTPException implements Exception {

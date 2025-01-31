@@ -41,9 +41,10 @@ class SalesRemoteDataSourceImpl implements SalesRemoteDataSource {
         },
         body: jsonEncode(newSale.tojson()),
       );
+      print("rayen ${res.body}");
       if (res.statusCode == 200 || res.statusCode == 201) {
         final data = jsonDecode(res.body);
-        return SalesModel.fromJson(data['sale']);
+        return SalesModel.fromJson(data);
       } else {
         throw ServerException();
       }

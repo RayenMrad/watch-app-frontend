@@ -12,9 +12,10 @@ import 'package:dartz/dartz.dart';
 import 'package:http/http.dart' as http;
 
 abstract class CommandRemoteDataSource {
-  Future<void> createCommand(String userId, List<Sales> sales);
+  Future<CommandModel> createCommand(CommandModel newCommand);
   Future<CommandModel> getCommandById(String commandId);
-  Future<void> cancelCommand(String commandId);
+  Future<List<CommandModel>> getAllCommands(String userId);
+  Future<void> updateCommandstatus(String commandId, String status);
 }
 
 class CommandRemoteDataSourceImpl implements CommandRemoteDataSource {
@@ -27,20 +28,12 @@ class CommandRemoteDataSourceImpl implements CommandRemoteDataSource {
   }
 
   @override
-  Future<void> cancelCommand(String commandId) {
-    // TODO: implement cancelCommand
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<void> createCommand(String userId, List<Sales> sales) async {
+  Future<CommandModel> createCommand(CommandModel newCommand) async {
     try {
       String authToken = await token.then((value) => value!.token);
       final url = Uri.parse(ApiConst.addCommand);
-      final body = jsonEncode({
-        'userId': userId,
-        'sales': sales.map((sales) => (sales as SalesModel).tojson()).toList(),
-      });
+      final body = jsonEncode(newCommand.tojson());
+
       final res = await http.post(
         url,
         headers: {
@@ -49,10 +42,18 @@ class CommandRemoteDataSourceImpl implements CommandRemoteDataSource {
         },
         body: body,
       );
-      if (res.statusCode != 200) {
-        throw ServerException(message: "Failed to create command");
+
+      print("Response Status Code: ${res.statusCode}");
+      print("Response Body: ${res.body}");
+
+      if (res.statusCode == 200 || res.statusCode == 201) {
+        final data = jsonDecode(res.body);
+        return CommandModel.fromJson(data);
+      } else {
+        throw ServerException();
       }
     } catch (e) {
+      print("Error: $e");
       rethrow;
     }
   }
@@ -71,6 +72,52 @@ class CommandRemoteDataSourceImpl implements CommandRemoteDataSource {
         throw ServerException();
       }
     } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<CommandModel>> getAllCommands(String userId) async {
+    try {
+      final authToken = await token.then((value) => value!.token);
+      final res = await http.get(
+        Uri.parse('${ApiConst.getAllCommands}/$userId'),
+        headers: {
+          'Authorization': 'Bearer $authToken',
+        },
+      );
+      if (res.statusCode == 200) {
+        List<dynamic> body = json.decode(res.body);
+        return body.map((e) => CommandModel.fromJson(e)).toList();
+      } else if (res.statusCode == 404) {
+        throw CommandNotFoundException();
+      } else {
+        throw ServerException();
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> updateCommandstatus(String commandId, String status) async {
+    try {
+      final authToken = await token.then((value) => value!.token);
+      final url = Uri.parse("${ApiConst.updateCommandStatus}/$commandId");
+      final body = jsonEncode({'commandStatus': status});
+      final res = await http.put(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $authToken',
+        },
+        body: body,
+      );
+      if (res.statusCode != 200) {
+        throw ServerException();
+      }
+    } catch (e) {
+      print("object Command: ${e.toString()}");
       rethrow;
     }
   }

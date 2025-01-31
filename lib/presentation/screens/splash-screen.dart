@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:clean_arch/core/utils/string_const.dart';
 import 'package:clean_arch/di.dart';
 import 'package:clean_arch/domain/usecases/authentication_usecases/auto_login_usecase.dart';
 import 'package:clean_arch/domain/usecases/authentication_usecases/get_user_by_id_usecase.dart';
@@ -10,8 +11,11 @@ import 'package:clean_arch/presentation/controller/watch_controller.dart';
 import 'package:clean_arch/presentation/controller/wishlist_controller.dart';
 import 'package:clean_arch/presentation/screens/auth-screens/login-page.dart';
 import 'package:clean_arch/presentation/screens/main-screen.dart';
+import 'package:clean_arch/presentation/screens/walcome-screens/screen-four.dart';
+import 'package:clean_arch/presentation/screens/walcome-screens/screen-one.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -109,11 +113,18 @@ class _SplashScreenState extends State<SplashScreen>
         res = false;
       }
     });
+    final sp = await SharedPreferences.getInstance();
+    final data = sp.getBool(StringConst.SP_TUTORIAL_KEY) ?? false;
+
     Future.delayed(Duration(seconds: duration), () {
       Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-              builder: (_) => res ? const MainScreen() : const LoginPage()));
+              builder: (_) => res
+                  ? const MainScreen()
+                  : data
+                      ? const ScreenFour()
+                      : const ScreenOne()));
     });
   }
 

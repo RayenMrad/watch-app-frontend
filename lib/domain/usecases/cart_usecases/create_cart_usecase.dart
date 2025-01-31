@@ -8,5 +8,5 @@ class CreateCartUsecase {
   const CreateCartUsecase(this._cartRepository);
 
   Future<Either<Failure, Unit>> call({required String userId}) async =>
-      _cartRepository.createCart(userId: userId);
+      await _cartRepository.createCart(userId: userId);
 }

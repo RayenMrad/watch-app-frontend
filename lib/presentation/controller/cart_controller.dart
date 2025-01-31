@@ -115,10 +115,10 @@ class CartController extends GetxController {
   Future addSale(Sales newSale) async {
     if (!getCartmodelId.contains(newSale.watchId)) {
       final addsale = await AddSaleUsecase(sl()).call(newSale);
-      addsale.fold((l) => null, (r) async {
+      addsale.fold((l) => print(l), (r) async {
+        print("rayen  $cartSales rayen");
+
         cartSales.add(r);
-        print("$cartSales 3");
-        await _updateSailes();
       });
     } else {
       Fluttertoast.showToast(
@@ -130,7 +130,9 @@ class CartController extends GetxController {
           textColor: Colors.white,
           fontSize: 16.0);
     }
+    await _updateSailes();
     await getUserCart(newSale.userId);
+    update();
   }
 
   void getReclamationPrice() {

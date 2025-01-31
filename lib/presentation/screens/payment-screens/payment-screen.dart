@@ -1,6 +1,14 @@
+import 'dart:math';
+
+import 'package:clean_arch/domain/enteties/command.dart';
+import 'package:clean_arch/presentation/controller/authentication_controller.dart';
+import 'package:clean_arch/presentation/controller/cart_controller.dart';
+import 'package:clean_arch/presentation/controller/command_controller.dart';
 import 'package:clean_arch/presentation/screens/payment-screens/payment-success-screen.dart';
 import 'package:clean_arch/presentation/widgets/headers/Payment-header.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 
 class PaymentMethodScreen extends StatefulWidget {
   final double totalPrice;
@@ -14,12 +22,23 @@ class PaymentMethodScreen extends StatefulWidget {
 class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
   String? selectedPayment = ''; // Variable to hold the selected payment method
 
+  String generateReference() {
+    const String chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    Random random = Random();
+    String randomPart =
+        List.generate(8, (index) => chars[random.nextInt(chars.length)]).join();
+    return 'lw$randomPart';
+  }
+
   @override
   Widget build(BuildContext context) {
     // Assuming fixed delivery fee and discount values
     double deliveryFee = 10.0;
-    double discount = 50.0;
+    double discountPercentage = Random().nextDouble() * 20;
+    double discount = (widget.totalPrice * discountPercentage) / 100;
     double finalTotal = widget.totalPrice + deliveryFee - discount;
+    String ref = generateReference();
+    DateTime commandDate = DateTime.now();
 
     return Scaffold(
       body: Stack(
@@ -145,7 +164,8 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                             children: [
                               const Text('Discount:',
                                   style: TextStyle(fontSize: 16)),
-                              Text('-${discount.toStringAsFixed(2)} Dt',
+                              Text(
+                                  '-${discount.toStringAsFixed(2)} Dt  (${discountPercentage.toInt()}%)',
                                   style: const TextStyle(fontSize: 16)),
                             ],
                           ),
@@ -167,24 +187,73 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                           const SizedBox(height: 16),
                           SizedBox(
                             width: double.infinity,
-                            child: ElevatedButton(
-                              onPressed: () {
-                                Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                    builder: (_) => const PaymentSuccessPage(),
-                                  ),
-                                );
-                              },
-                              style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.all(16),
-                                backgroundColor: Colors.black,
-                              ),
-                              child: const Text(
-                                'Pay Now',
-                                style: TextStyle(
-                                    fontSize: 18, color: Colors.white),
-                              ),
-                            ),
+                            child: GetBuilder(
+                                init: CommandController(),
+                                builder: (commandController) {
+                                  return ElevatedButton(
+                                    onPressed: () async {
+                                      if (selectedPayment == null ||
+                                          selectedPayment!.isEmpty) {
+                                        Fluttertoast.showToast(
+                                          msg: "Please select a payment method",
+                                          toastLength: Toast.LENGTH_SHORT,
+                                          gravity: ToastGravity.TOP,
+                                          backgroundColor: Color(0xFFAF6767),
+                                          textColor: Colors.white,
+                                        );
+                                        return;
+                                      }
+
+                                      final AuthenticationController
+                                          authenticationController = Get.find();
+
+                                      final CartController cartController =
+                                          Get.find();
+
+                                      print(
+                                          "object 11 : ${cartController.getCartSalesId}");
+
+                                      final newCommand = Command(
+                                          adresse: authenticationController
+                                              .currentUser.adresse,
+                                          reference: ref,
+                                          commandTotalPrice: finalTotal,
+                                          commandDate: commandDate,
+                                          commandStatus: "paid",
+                                          userId: authenticationController
+                                              .currentUser.id!,
+                                          sales: cartController.getCartSalesId);
+
+                                      final res = await commandController
+                                          .createCommand(newCommand);
+
+                                      await cartController.clearCart();
+
+                                      print(res);
+
+                                      if (res != null) {
+                                        Navigator.of(context).pushReplacement(
+                                          MaterialPageRoute(
+                                            builder: (_) => PaymentSuccessPage(
+                                              currentCommand: res,
+                                            ),
+                                          ),
+                                        );
+                                      } else {
+                                        print("leftttt");
+                                      }
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      padding: const EdgeInsets.all(16),
+                                      backgroundColor: Colors.black,
+                                    ),
+                                    child: const Text(
+                                      'Pay Now',
+                                      style: TextStyle(
+                                          fontSize: 18, color: Colors.white),
+                                    ),
+                                  );
+                                }),
                           ),
                         ],
                       ),
