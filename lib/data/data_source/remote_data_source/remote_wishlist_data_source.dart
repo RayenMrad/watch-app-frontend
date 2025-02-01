@@ -28,15 +28,16 @@ class WishlistRemoteDataSourceImpl implements WishlistRemoteDataSource {
   Future<void> createWishList({required String userId}) async {
     try {
       final url = Uri.parse(ApiConst.createWishList);
-      final body = jsonEncode({'userId': userId, 'watchs': []});
+      final body = {"userId": userId};
       final res = await http.post(
         url,
         body: body,
       );
-      if (res.statusCode != 200) {
+      if (res.statusCode != 201) {
         throw ServerException(message: "Failed to create wishlist");
       }
     } catch (e) {
+      print(e.toString());
       rethrow;
     }
   }

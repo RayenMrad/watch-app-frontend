@@ -8,6 +8,7 @@ import 'package:clean_arch/presentation/screens/favorites-screen.dart';
 import 'package:clean_arch/presentation/screens/home-screen.dart';
 import 'package:clean_arch/presentation/screens/profile-screens/profile-screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 class DrawerContents extends StatelessWidget {
@@ -58,24 +59,10 @@ class DrawerContents extends StatelessWidget {
                             const Color(0xFF858585), // Default gray background
                       ),
                       child: CircleAvatar(
-                        radius: 50,
-                        backgroundColor: Colors.grey[300],
-                        backgroundImage:
-                            userImage != null ? FileImage(userImage!) : null,
-                        child: userImage == null
-                            ? controller.currentUser.image != null
-                                ? ClipOval(
-                                    child: Image.network(
-                                      controller.currentUser.image!,
-                                      fit: BoxFit.cover,
-                                      width:
-                                          100, // Match the diameter of the CircleAvatar (2 * radius)
-                                      height: 100,
-                                    ),
-                                  )
-                                : Icon(Icons.person,
-                                    size: 50, color: Colors.grey)
-                            : null,
+                        backgroundImage: controller.currentUser.image == ''
+                            ? Image.asset('assets/images/userImage.jpg').image
+                            : NetworkImage(controller.currentUser.image!),
+                        radius: 60.r,
                       ),
                     ));
               }),

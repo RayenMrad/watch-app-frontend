@@ -48,8 +48,8 @@ class _CartWatchListState extends State<CartWatchList> {
             future: watchController.getWatchById(watchId),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                final watch = watchController.allWatchs
-                    .firstWhere((element) => element.id == watchId);
+                // final watch = watchController.allWatchs
+                //     .firstWhere((element) => element.id == watchId);
 
                 return Container(
                   margin: const EdgeInsets.symmetric(
@@ -76,14 +76,14 @@ class _CartWatchListState extends State<CartWatchList> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
                           color: Colors.grey[200],
-                          image: watch.image != null
+                          image: snapshot.data!.image != null
                               ? DecorationImage(
-                                  image: NetworkImage(watch.image),
+                                  image: NetworkImage(snapshot.data!.image),
                                   fit: BoxFit.cover,
                                 )
                               : null,
                         ),
-                        child: watch.image == null
+                        child: snapshot.data!.image == null
                             ? const Icon(Icons.image, color: Colors.grey)
                             : null,
                       ),
@@ -94,7 +94,7 @@ class _CartWatchListState extends State<CartWatchList> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              watch.name ?? 'Product Name',
+                              snapshot.data!.name ?? 'Product Name',
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -104,7 +104,7 @@ class _CartWatchListState extends State<CartWatchList> {
                             ),
                             const SizedBox(height: 5),
                             Text(
-                              watch.reference ?? 'Product Reference',
+                              snapshot.data!.reference ?? 'Product Reference',
                               style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,

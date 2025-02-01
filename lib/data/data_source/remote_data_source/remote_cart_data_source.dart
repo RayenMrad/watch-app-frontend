@@ -30,13 +30,13 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
   Future<void> createCart({required String userId}) async {
     try {
       final url = Uri.parse(ApiConst.addCart);
-      final body = jsonEncode({'userId': userId, 'sales': []});
+      final body = {'userId': userId};
 
       final res = await http.post(
         url,
         body: body,
       );
-      if (res.statusCode != 200) {
+      if (res.statusCode != 201) {
         throw ServerException(message: "Failed to create cart");
       }
     } catch (e) {

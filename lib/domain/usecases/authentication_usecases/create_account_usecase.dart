@@ -11,7 +11,7 @@ class CreateAccountUsecase {
   Future<Either<Failure, String>> call(
           {required String firstName,
           required String lastName,
-          required String image,
+          String? image,
           required String email,
           required String adresse,
           required String phone,

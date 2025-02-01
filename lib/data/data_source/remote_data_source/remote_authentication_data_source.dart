@@ -98,20 +98,20 @@ class AuthenticationRemoteDataSourceImpl
         body: {
           "firstName": firstName,
           "lastName": lastName,
-          "image": "https://example.com/john.jpg",
-          "email": "john.doe@example.com",
+          "image": image,
+          "email": email,
           "adresse": adresse,
           "phone": phone,
-          "gender": "Male",
-          "birthDate": "1990-01-01T00:00:00Z",
+          "gender": gender,
+          "birthDate": birthDate.toString(),
           // "commandHistory": [],
           "password": password
         },
       );
-      print(res.statusCode);
+      print(res.body);
       if (res.statusCode == 201) {
         final responseData = jsonDecode(res.body);
-        return responseData.data["uId"];
+        return responseData['uid'];
       } else if (res.statusCode == 403) {
         throw RegistrationException(t.email_already_used);
       } else {

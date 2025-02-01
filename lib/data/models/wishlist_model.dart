@@ -11,5 +11,5 @@ class WishlistModel extends Wishlist {
       watchs: (json['watches'] as List).map((e) => e.toString()).toList());
 
   Map<String, dynamic> toJson() =>
-      {"_id": id, "userId": userId, "watches": watchs.map((e) => id).toList()};
+      {"userId": userId, "watches": watchs.map((e) => id).toList()};
 }

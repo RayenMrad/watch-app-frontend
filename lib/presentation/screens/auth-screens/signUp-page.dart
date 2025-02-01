@@ -6,6 +6,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
+import 'package:intl/intl.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -24,6 +25,30 @@ final confirmPasswordController = TextEditingController();
 
 class _SignUpPageState extends State<SignUpPage> {
   final _formKey = GlobalKey<FormState>();
+  final AuthenticationController authenticationController = Get.find();
+
+  String? _selectedGender;
+  String? _birthDate;
+  DateTime? _selectedBirthdate;
+
+  DateFormat format = DateFormat("yyyy-MM-dd");
+
+  void _pickBirthdate(BuildContext context) async {
+    DateTime initialDate = _selectedBirthdate ?? DateTime.now();
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: initialDate,
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+    );
+
+    if (pickedDate != null) {
+      setState(() {
+        _selectedBirthdate = pickedDate;
+        _birthDate = format.format(_selectedBirthdate!);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -194,8 +219,10 @@ class _SignUpPageState extends State<SignUpPage> {
                                           child: Text(value),
                                         );
                                       }).toList(),
-                                      onChanged: (String? newValue) {
-                                        print('Selected gender: $newValue');
+                                      onChanged: (value) {
+                                        setState(() {
+                                          _selectedGender = value;
+                                        });
                                       },
                                       hint: const Text('gender'),
                                     ),
@@ -217,22 +244,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                         prefixIcon:
                                             const Icon(Icons.calendar_today),
                                       ),
-                                      onTap: () async {
-                                        DateTime? pickedDate =
-                                            await showDatePicker(
-                                          context: context,
-                                          initialDate: DateTime.now(),
-                                          firstDate: DateTime(1900),
-                                          lastDate: DateTime.now(),
-                                        );
-
-                                        if (pickedDate != null) {
-                                          String formattedDate =
-                                              "${pickedDate.year}-${pickedDate.month.toString().padLeft(2, '0')}-${pickedDate.day.toString().padLeft(2, '0')}";
-                                          print(
-                                              'Selected date: $formattedDate');
-                                        }
-                                      },
+                                      onTap: () => _pickBirthdate(context),
                                     ),
                                   ),
                                 ),
@@ -291,6 +303,9 @@ class _SignUpPageState extends State<SignUpPage> {
                                               phone: phoneController,
                                               lastName: lastNameController,
                                               password: passwordController,
+                                              birthDate: _birthDate!,
+                                              gender: _selectedGender!,
+                                              image: "",
                                               context: context);
                                         } else {
                                           Fluttertoast.showToast(

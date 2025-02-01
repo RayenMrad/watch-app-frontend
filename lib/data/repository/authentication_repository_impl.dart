@@ -23,7 +23,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   Future<Either<Failure, String>> createAccount(
       {required String firstName,
       required String lastName,
-      required String image,
+      String? image,
       required String email,
       required String adresse,
       required String phone,
@@ -32,7 +32,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       required String password}) async {
     try {
       final res = await authenticationRemoteDataSource.createAccount(firstName,
-          lastName, image, email, adresse, phone, gender, birthDate, password);
+          lastName, image!, email, adresse, phone, gender, birthDate, password);
       return Right(res);
     } on RegistrationException catch (e) {
       return Left(RegistrationFailure(e.message));

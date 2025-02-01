@@ -150,7 +150,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             decoration: InputDecoration(
                               labelText: "Gender",
                             ),
-                            items: ['Male', 'Female', 'Other']
+                            items: ['Male', 'Female']
                                 .map((gender) => DropdownMenuItem(
                                       value: gender,
                                       child: Text(gender),

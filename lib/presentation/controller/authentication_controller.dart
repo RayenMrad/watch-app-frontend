@@ -25,6 +25,7 @@ import 'package:clean_arch/presentation/screens/auth-screens/login-page.dart';
 import 'package:clean_arch/presentation/screens/auth-screens/otp-screen.dart';
 import 'package:clean_arch/presentation/screens/auth-screens/reset-password-screen.dart';
 import 'package:clean_arch/presentation/screens/home-screen.dart';
+import 'package:clean_arch/presentation/screens/walcome-screens/screen-four.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -99,6 +100,9 @@ class AuthenticationController extends GetxController {
       required TextEditingController phone,
       required TextEditingController password,
       required TextEditingController cpassword,
+      String? birthDate,
+      String? gender,
+      String? image,
       required BuildContext context}) async {
     final res = await CreateAccountUsecase(sl()).call(
         email: email.text,
@@ -107,9 +111,9 @@ class AuthenticationController extends GetxController {
         phone: phone.text,
         firstName: firstName.text,
         lastName: lastName.text,
-        image: '',
-        birthDate: DateTime.parse("2020-07-17T03:18:31.177769-04:00"),
-        gender: 'Male');
+        image: image!,
+        birthDate: DateTime.parse(birthDate!),
+        gender: gender!);
     String userid = "";
     String message = '';
     res.fold((l) => message = l.message!, (r) async {
@@ -125,8 +129,8 @@ class AuthenticationController extends GetxController {
       cpassword.clear();
       phone.clear();
       adresse.clear();
-      gender = null;
-      birthDate = null;
+      gender = "";
+      birthDate = "";
       termsAccepted = false;
       update();
     });
@@ -187,7 +191,7 @@ class AuthenticationController extends GetxController {
     update();
     await LogoutUsecase(sl())();
     Navigator.of(context)
-        .pushReplacement(MaterialPageRoute(builder: (_) => const LoginPage()));
+        .pushReplacement(MaterialPageRoute(builder: (_) => const ScreenFour()));
   }
 
   Future<void> sendFrogetPasswordRequest(TextEditingController useremail,

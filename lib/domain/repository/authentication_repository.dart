@@ -9,7 +9,7 @@ abstract class AuthenticationRepository {
   Future<Either<Failure, String>> createAccount(
       {required String firstName,
       required String lastName,
-      required String image,
+      String? image,
       required String email,
       required String adresse,
       required String phone,

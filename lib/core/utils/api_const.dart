@@ -49,7 +49,7 @@ class ApiConst {
   static const deleteCart = '$baseUrl/deleteCart';
 
   //wishlist apis
-  static const createWishList = '$baseUrl/wishList/create';
+  static const createWishList = '$baseUrl/wishlist';
   static const getOneWishList = '$baseUrl/wishList';
   static const updateWishList = '$baseUrl/updateWishlist';
   static const deleteWishList = '$baseUrl/wishList/delete';
