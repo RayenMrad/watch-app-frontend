@@ -37,6 +37,7 @@ class _CatScreenState extends State<CatScreen> {
           Column(
             children: [
               Header(
+                cat: true,
                 title: 'Categories',
                 onMenuPressed: () {
                   _scaffoldKey.currentState?.openDrawer();
@@ -62,7 +63,7 @@ class _CatScreenState extends State<CatScreen> {
                             "Products you May Liked",
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontFamily: 'Roboto',
+                              fontFamily: 'Merriweather',
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
@@ -72,7 +73,7 @@ class _CatScreenState extends State<CatScreen> {
                             "Find the perfect watch to match your style",
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontFamily: 'Roboto',
+                              fontFamily: 'Merriweather',
                               fontSize: 15,
                               fontWeight: FontWeight.normal,
                               color: Color(0xFF9F9F9F),
@@ -136,6 +137,7 @@ class _CatScreenState extends State<CatScreen> {
                                                   child: Text(
                                                     category['name'],
                                                     style: TextStyle(
+                                                        fontFamily: 'Roboto',
                                                         color: Colors.white),
                                                   ),
                                                 ),

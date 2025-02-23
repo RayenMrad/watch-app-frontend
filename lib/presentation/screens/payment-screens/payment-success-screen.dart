@@ -42,13 +42,14 @@ class PaymentSuccessPage extends StatelessWidget {
                         'Payment Successful!',
                         style: TextStyle(
                           fontSize: 20,
+                          fontFamily: 'Merriweather',
                           fontWeight: FontWeight.bold,
                         ),
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 30),
                       Text(
-                        '${currentCommand.commandTotalPrice} dt',
+                        '${currentCommand.commandTotalPrice.toStringAsFixed(2)} dt',
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
@@ -58,20 +59,31 @@ class PaymentSuccessPage extends StatelessWidget {
                       const SizedBox(height: 20),
                       const Text(
                         'Has been paid to your command',
-                        style: TextStyle(fontSize: 16, color: Colors.black54),
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.black54,
+                          fontFamily: 'Merriweather',
+                        ),
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 30),
                       Text(
                         'Ref: ${currentCommand.reference}',
                         style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w600),
+                          fontFamily: 'Merriweather',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 30),
                       Text(
                         '${currentCommand.commandDate}',
-                        style: TextStyle(fontSize: 16, color: Colors.black54),
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.black54,
+                          fontFamily: 'Merriweather',
+                        ),
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 30),
@@ -92,7 +104,11 @@ class PaymentSuccessPage extends StatelessWidget {
                           },
                           child: const Text(
                             "Dismiss",
-                            style: TextStyle(color: Colors.white, fontSize: 16),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontFamily: 'Merriweather',
+                            ),
                           ),
                         ),
                       ),

@@ -50,8 +50,9 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
                               "Enter your Email To Reset Password ",
                               style: TextStyle(
                                 color: Colors.black54,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w600,
+                                fontSize: 18,
+                                // fontWeight: FontWeight.w500,
+                                fontFamily: 'Merriweather',
                               ),
                             ),
                             const SizedBox(height: 100),
@@ -85,7 +86,7 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
                               width: double.infinity,
                               height: 50,
                               decoration: BoxDecoration(
-                                color: Colors.black,
+                                color: Color(0xFFAF6767),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: GetBuilder<AuthenticationController>(
@@ -101,7 +102,7 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
                                         // Handle account creation
                                       },
                                       child: const Text(
-                                        "Connect",
+                                        "Sent",
                                         style: TextStyle(
                                           color: Colors.white,
                                         ),

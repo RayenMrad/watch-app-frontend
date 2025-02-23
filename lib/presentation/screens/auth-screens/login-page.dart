@@ -53,6 +53,7 @@ class _LoginPageState extends State<LoginPage> {
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 20,
+                              fontFamily: 'Merriweather',
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -89,6 +90,7 @@ class _LoginPageState extends State<LoginPage> {
                                 color: Colors.black,
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
+                                fontFamily: 'Merriweather',
                               ),
                             ),
                             const SizedBox(height: 50),
@@ -159,7 +161,10 @@ class _LoginPageState extends State<LoginPage> {
                                 },
                                 child: const Text(
                                   'Forgot Password?',
-                                  style: TextStyle(color: Colors.grey),
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontFamily: 'Merriweather',
+                                  ),
                                 ),
                               ),
                             ),
@@ -199,6 +204,7 @@ class _LoginPageState extends State<LoginPage> {
                                       child: Text(
                                         "Connect ",
                                         style: TextStyle(
+                                          fontFamily: 'Merriweather',
                                           color: Colors.white,
                                         ),
                                       ),
@@ -242,6 +248,7 @@ class _LoginPageState extends State<LoginPage> {
                                     const Text(
                                       "Connect with Facebook",
                                       style: TextStyle(
+                                        fontFamily: 'Merriweather',
                                         color: Colors.white,
                                       ),
                                     ),
@@ -280,6 +287,7 @@ class _LoginPageState extends State<LoginPage> {
                                     const Text(
                                       "Connect with Google",
                                       style: TextStyle(
+                                        fontFamily: 'Merriweather',
                                         color: Colors.white,
                                       ),
                                     ),

@@ -147,21 +147,39 @@ class _SplashScreenState extends State<SplashScreen>
                       ),
                     ),
                     child: Image.asset(
-                      'assets/images/logo.png',
+                      'assets/images/logo1.png',
                       height: 150,
                     ),
                   ),
-                  FadeTransition(
-                    opacity: _textOpacityAnimation,
+                  ScaleTransition(
+                    scale: Tween<double>(begin: 0, end: 1).animate(
+                      CurvedAnimation(
+                        parent: _animationController,
+                        curve: Curves.easeInOut,
+                      ),
+                    ),
                     child: const Text(
-                      'Welcome to our first E-commerce App',
+                      'Where precision meets luxury',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black,
+                        fontFamily: 'Merriweather',
+                        color: Color(0xFFAF6767),
                       ),
                     ),
                   ),
+                  // FadeTransition(
+                  //   opacity: _textOpacityAnimation,
+                  //   child: const Text(
+                  //     'Where precision meets luxury',
+                  //     style: TextStyle(
+                  //       fontSize: 20,
+                  //       fontWeight: FontWeight.bold,
+                  //       fontFamily: 'Merriweather',
+                  //       color: Color(0xFFAF6767),
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               );
             }),
@@ -169,10 +187,10 @@ class _SplashScreenState extends State<SplashScreen>
       bottomNavigationBar: const SizedBox(
         height: 20,
         child: Text(
-          'Powered b 9odret rabi ',
+          'Powered by Epic Valor X ',
           textAlign: TextAlign.center,
           style: TextStyle(
-            color: Colors.black,
+            color: Color(0xFFAF6767),
             fontWeight: FontWeight.w700,
             fontStyle: FontStyle.italic,
           ),

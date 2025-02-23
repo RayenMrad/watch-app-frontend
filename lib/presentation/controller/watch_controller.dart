@@ -99,6 +99,15 @@ class WatchController extends GetxController {
     update();
   }
 
+  void filterProducts(String word) {
+    List<Watch> prd = allWatchs;
+    filtredWatchs = prd
+        .where((element) =>
+            (element.name.toUpperCase().contains(word.toUpperCase())))
+        .toList();
+    update();
+  }
+
   double getPrice(Watch product) {
     return product.price;
   }

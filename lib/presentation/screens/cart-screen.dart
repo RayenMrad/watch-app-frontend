@@ -131,11 +131,12 @@ class _CartPageState extends State<CartPage> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 const Text(
-                                  "Total Price:",
+                                  "Total Price :",
                                   style: TextStyle(
                                     fontSize: 15,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white,
+                                    fontFamily: 'Merriweather',
                                   ),
                                 ),
                                 GetBuilder(
@@ -160,7 +161,7 @@ class _CartPageState extends State<CartPage> {
                             height: 50,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.black,
+                                backgroundColor: Color(0xFFAF6767),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),
                                 ),
@@ -180,6 +181,7 @@ class _CartPageState extends State<CartPage> {
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 16,
+                                  fontFamily: 'Merriweather',
                                 ),
                               ),
                             ),

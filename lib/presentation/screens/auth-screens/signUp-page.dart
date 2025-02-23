@@ -86,6 +86,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               color: Colors.white,
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
+                              fontFamily: 'Merriweather',
                             ),
                           ),
                         ),
@@ -285,7 +286,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               width: double.infinity,
                               height: 50,
                               decoration: BoxDecoration(
-                                color: Colors.black,
+                                color: Color(0xFFAF6767),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: GetBuilder(
@@ -326,6 +327,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                         "Create ",
                                         style: TextStyle(
                                           color: Colors.white,
+                                          fontFamily: 'Merriweather',
                                         ),
                                       ),
                                     );

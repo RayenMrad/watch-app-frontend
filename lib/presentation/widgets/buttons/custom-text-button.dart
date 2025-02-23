@@ -46,7 +46,10 @@ class CustomTextButton extends StatelessWidget {
             ],
             Text(
               text,
-              style: TextStyle(color: textColor),
+              style: TextStyle(
+                color: textColor,
+                fontFamily: 'Merriweather',
+              ),
             ),
           ],
         ),

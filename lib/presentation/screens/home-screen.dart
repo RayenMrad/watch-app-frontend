@@ -3,6 +3,7 @@ import 'package:clean_arch/presentation/controller/watch_controller.dart';
 import 'package:clean_arch/presentation/screens/auth-screens/signUp-page.dart';
 import 'package:clean_arch/presentation/screens/cat-screen.dart';
 import 'package:clean_arch/presentation/screens/fetch-watchs.dart';
+import 'package:clean_arch/presentation/widgets/carousel.dart';
 import 'package:clean_arch/presentation/widgets/drawer-contents.dart';
 import 'package:clean_arch/presentation/widgets/headers/header.dart';
 import 'package:clean_arch/presentation/widgets/headers/home_select_header.dart';
@@ -54,7 +55,7 @@ class _HomePageState extends State<HomePage> {
                         "Discover Timeless Elegance",
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          fontFamily: 'Roboto',
+                          fontFamily: 'Merriweather',
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
@@ -64,7 +65,7 @@ class _HomePageState extends State<HomePage> {
                         "Find the perfect watch to match your style",
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          fontFamily: 'Roboto',
+                          fontFamily: 'Merriweather',
                           fontSize: 15,
                           fontWeight: FontWeight.normal,
                           color: Color(0xFF9F9F9F),
@@ -72,64 +73,9 @@ class _HomePageState extends State<HomePage> {
                       ),
                       const SizedBox(height: 20),
 
-                      // First Header and Grid
-                      HomeSelectHeader(
-                        categoryTitle: 'Categories',
-                        onSeeAllPressed: () {},
-                        seeAll: false,
-                      ),
+                      Carousel(),
+
                       const SizedBox(height: 10),
-                      GetBuilder<CategoryController>(
-                        init: CategoryController(),
-                        builder: (controller) {
-                          return SizedBox(
-                            height: 60,
-                            child: FutureBuilder(
-                              future: controller.getAllCategories(),
-                              builder: (context, snapshot) {
-                                if (snapshot.hasData) {
-                                  return ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: controller.allCategories.length,
-                                    itemBuilder: (_, index) => Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          color: Color(0xFFAF6767),
-                                          border: Border.all(
-                                            color: Color(0xFFAF6767),
-                                            width: 1.5,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                        ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Text(
-                                            controller
-                                                .allCategories[index].name,
-                                            style:
-                                                TextStyle(color: Colors.white),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                } else if (snapshot.connectionState ==
-                                    ConnectionState.waiting) {
-                                  return const Center(
-                                    child: CircularProgressIndicator.adaptive(),
-                                  );
-                                } else {
-                                  return const Center(
-                                      child: Text('Error loading categories'));
-                                }
-                              },
-                            ),
-                          );
-                        },
-                      ),
-                      const SizedBox(height: 20),
 
                       // Second Header and Grid
                       HomeSelectHeader(
@@ -138,7 +84,7 @@ class _HomePageState extends State<HomePage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const SignUpPage(),
+                              builder: (context) => const CatScreen(),
                             ),
                           );
                         },

@@ -36,9 +36,10 @@ class DrawerContents extends StatelessWidget {
                     accountName: Text(
                       controller.currentUser.firstName,
                       style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                          fontFamily: 'Libre Baskerville'),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        fontFamily: 'Merriweather',
+                      ),
                     ),
                     //userFirstName
                     accountEmail: Text(
@@ -46,7 +47,7 @@ class DrawerContents extends StatelessWidget {
                       style: TextStyle(
                           fontWeight: FontWeight.w200,
                           fontSize: 15,
-                          fontFamily: 'Libre Baskerville',
+                          fontFamily: 'Merriweather',
                           color: Color(0xFF858585)),
                     ),
                     //userEmail
@@ -75,7 +76,7 @@ class DrawerContents extends StatelessWidget {
                 title: Text(
                   "Home",
                   style: TextStyle(
-                      fontFamily: 'Roboto',
+                      fontFamily: 'Merriweather',
                       fontWeight: FontWeight.w600,
                       fontSize: 20),
                 ),
@@ -97,7 +98,7 @@ class DrawerContents extends StatelessWidget {
                 title: Text(
                   "Profile",
                   style: TextStyle(
-                      fontFamily: 'Roboto',
+                      fontFamily: 'Merriweather',
                       fontWeight: FontWeight.w600,
                       fontSize: 20),
                 ),
@@ -121,7 +122,7 @@ class DrawerContents extends StatelessWidget {
                   title: Text(
                     "Favorites",
                     style: TextStyle(
-                        fontFamily: 'Roboto',
+                        fontFamily: 'Merriweather',
                         fontWeight: FontWeight.w600,
                         fontSize: 20),
                   ),
@@ -144,7 +145,7 @@ class DrawerContents extends StatelessWidget {
                   title: Text(
                     "Cart",
                     style: TextStyle(
-                        fontFamily: 'Roboto',
+                        fontFamily: 'Merriweather',
                         fontWeight: FontWeight.w600,
                         fontSize: 20),
                   ),
@@ -166,7 +167,7 @@ class DrawerContents extends StatelessWidget {
                 title: Text(
                   "Notifications",
                   style: TextStyle(
-                      fontFamily: 'Roboto',
+                      fontFamily: 'Merriweather',
                       fontWeight: FontWeight.w600,
                       fontSize: 20),
                 ),
@@ -184,7 +185,7 @@ class DrawerContents extends StatelessWidget {
                 title: Text(
                   "Settings",
                   style: TextStyle(
-                      fontFamily: 'Roboto',
+                      fontFamily: 'Merriweather',
                       fontWeight: FontWeight.w600,
                       fontSize: 20),
                 ),
@@ -205,7 +206,7 @@ class DrawerContents extends StatelessWidget {
                   title: Text(
                     "Log Out",
                     style: TextStyle(
-                        fontFamily: 'Roboto',
+                        fontFamily: 'Merriweather',
                         fontWeight: FontWeight.w600,
                         fontSize: 20),
                   ),

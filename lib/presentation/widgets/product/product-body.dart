@@ -38,6 +38,7 @@ class WatchBody extends StatelessWidget {
                 fontSize: 15,
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
+                fontFamily: 'Merriweather',
                 overflow: TextOverflow.ellipsis,
               ),
             ),
@@ -65,6 +66,7 @@ class WatchBody extends StatelessWidget {
                 fontSize: 15,
                 fontWeight: FontWeight.normal,
                 color: Color(0xFF9F9F9F),
+                fontFamily: 'Merriweather',
               ),
             ),
           ),
@@ -115,7 +117,11 @@ class WatchBody extends StatelessWidget {
                   },
                   child: const Text(
                     "Add To Cart",
-                    style: TextStyle(color: Colors.white, fontSize: 16),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontFamily: 'Merriweather',
+                    ),
                   ),
                 );
               },

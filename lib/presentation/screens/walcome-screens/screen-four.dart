@@ -71,7 +71,7 @@ class _ScreenFourState extends State<ScreenFour> {
                         ),
                         child: TextButton(
                           onPressed: () {
-                            Navigator.pushReplacement(
+                            Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => LoginPage(),

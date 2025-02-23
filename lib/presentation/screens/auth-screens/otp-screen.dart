@@ -50,8 +50,9 @@ class _OtpPageState extends State<OtpPage> {
                               "Enter The OTP Sent To Your Email",
                               style: TextStyle(
                                 color: Colors.black54,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w600,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: 'Merriweather',
                               ),
                             ),
                             const SizedBox(height: 100),
@@ -77,7 +78,7 @@ class _OtpPageState extends State<OtpPage> {
                               width: double.infinity,
                               height: 50,
                               decoration: BoxDecoration(
-                                color: Colors.black,
+                                color: Color(0xFFAF6767),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: TextButton(
@@ -91,6 +92,7 @@ class _OtpPageState extends State<OtpPage> {
                                 child: const Text(
                                   "Submit",
                                   style: TextStyle(
+                                    fontFamily: 'Merriweather',
                                     color: Colors.white,
                                   ),
                                 ),

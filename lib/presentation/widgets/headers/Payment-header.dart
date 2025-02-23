@@ -29,6 +29,7 @@ class PaymentHeader extends StatelessWidget {
                 child: Text(
                   title,
                   style: const TextStyle(
+                    fontFamily: 'Merriweather',
                     color: Colors.white,
                     fontSize: 20,
                     fontWeight: FontWeight.bold,

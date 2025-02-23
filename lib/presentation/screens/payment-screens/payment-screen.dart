@@ -245,12 +245,15 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                                     },
                                     style: ElevatedButton.styleFrom(
                                       padding: const EdgeInsets.all(16),
-                                      backgroundColor: Colors.black,
+                                      backgroundColor: Color(0xFFAF6767),
                                     ),
                                     child: const Text(
                                       'Pay Now',
                                       style: TextStyle(
-                                          fontSize: 18, color: Colors.white),
+                                        fontSize: 18,
+                                        color: Colors.white,
+                                        fontFamily: 'Merriweather',
+                                      ),
                                     ),
                                   );
                                 }),

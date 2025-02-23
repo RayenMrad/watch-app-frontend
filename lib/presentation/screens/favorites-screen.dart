@@ -69,7 +69,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                                   const Text(
                                     "Your Favorites Watches",
                                     style: TextStyle(
-                                      fontFamily: 'Roboto',
+                                      fontFamily: 'Merriweather',
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -80,7 +80,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                                   const Text(
                                     "Find the perfect watch to match your style",
                                     style: TextStyle(
-                                      fontFamily: 'Roboto',
+                                      fontFamily: 'Merriweather',
                                       fontSize: 15,
                                       fontWeight: FontWeight.normal,
                                       color: Color(0xFF9F9F9F), // Gray color

@@ -21,7 +21,7 @@ class HomeSelectHeader extends StatelessWidget {
           categoryTitle,
           style: const TextStyle(
             fontSize: 20,
-            fontFamily: 'Libre Baskerville',
+            fontFamily: 'Merriweather',
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -36,7 +36,7 @@ class HomeSelectHeader extends StatelessWidget {
                   "See All",
                   style: TextStyle(
                     fontSize: 15,
-                    fontFamily: 'Libre Baskerville',
+                    fontFamily: 'Merriweather',
                   ),
                 ),
               )

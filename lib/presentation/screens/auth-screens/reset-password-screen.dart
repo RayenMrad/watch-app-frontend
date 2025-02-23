@@ -50,11 +50,12 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                           children: [
                             SizedBox(height: 70),
                             const Text(
-                              "Enter The OTP Sent To Your Email",
+                              "Reset Your Password",
                               style: TextStyle(
                                 color: Colors.black54,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w600,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: 'Merriweather',
                               ),
                             ),
                             const SizedBox(height: 100),
@@ -94,7 +95,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                               width: double.infinity,
                               height: 50,
                               decoration: BoxDecoration(
-                                color: Colors.black,
+                                color: Color(0xFFAF6767),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: TextButton(
@@ -111,6 +112,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                                   "Reset Password",
                                   style: TextStyle(
                                     color: Colors.white,
+                                    fontFamily: 'Merriweather',
                                   ),
                                 ),
                               ),
